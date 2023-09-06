@@ -36,3 +36,10 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+use App\Http\Controllers\PMS\RSM\RatingScaleMatrixController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/pms/rsm', [RatingScaleMatrixController::class, 'index'])
+        ->name('rsm');
+});
