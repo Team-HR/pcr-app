@@ -2,10 +2,10 @@
 namespace App\Http\Controllers\PMS\RSM;
 
 use App\Http\Controllers\Controller;
-use App\Models\PmsPeriod;
-use App\Models\Pms\Rsm\PmsRsm;
-use App\Models\Pms\Rsm\PmsRsmAssignment;
-use App\Models\Pms\Rsm\PmsRsmSuccessIndicator;
+use App\Models\PMS\PmsPeriod;
+use App\Models\PMS\RSM\PmsRsm;
+use App\Models\PMS\RSM\PmsRsmAssignment;
+use App\Models\PMS\RSM\PmsRsmSuccessIndicator;
 use App\Models\SysEmployee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -133,7 +133,7 @@ class RatingScaleMatrixController extends Controller
 
         $period = PmsPeriod::find($period_id);
 
-        return Inertia::render('Pms/RatingScaleMatrix/RatingScaleMatrix', ['period' => $period, 'period_id' => $period_id, 'rows' => $rows, 'parents' => $parents]);
+        return Inertia::render('PMS/RSM/RatingScaleMatrix', ['period' => $period, 'period_id' => $period_id, 'rows' => $rows, 'parents' => $parents]);
     }
 
     public function create($period_id, Request $request)

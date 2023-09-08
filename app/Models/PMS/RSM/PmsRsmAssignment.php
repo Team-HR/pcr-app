@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Pms\Rsm;
+namespace App\Models\PMS\RSM;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

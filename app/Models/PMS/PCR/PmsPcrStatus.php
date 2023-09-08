@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Pms\Pcr;
+namespace App\Models\PMS\PCR;
 
 use App\Models\PmsPeriod;
 use App\Models\SysDepartment;

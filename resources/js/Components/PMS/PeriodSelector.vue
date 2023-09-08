@@ -1,10 +1,19 @@
+<script setup>
+    import Column from 'primevue/column';
+    import Button from 'primevue/button';
+    import DataTable from 'primevue/datatable';
+    import Card from 'primevue/card';
+
+</script>
+
+
 <template>
     <Card class="w-full">
         <template #title> <i :class="icon"></i> <span> {{ title }}</span></template>
         <template #subtitle>{{ description }}</template>
         <template v-if="$page.props.auth.user.sys_employee_id" #content>
 
-            <DataTable :value="periods" responsiveLayout="scroll" class="w-4 mx-auto">
+            <DataTable :value="periods" responsiveLayout="scroll" class="w-6 mx-auto">
                 <Column field="year" header="Year">
                     <template #body="slotProp">
                         <span class="text-xl font-bold">{{ slotProp.data.year }}</span>
@@ -71,9 +80,9 @@ export default {
         },
     },
     created() {
-        // axios('/api/pms/periods').then(({ data }) => {
-        //     this.periods = data
-        // });
+        axios('/api/pms/periods').then(({ data }) => {
+            this.periods = data
+        });
     }
 };
 </script>

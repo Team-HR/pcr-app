@@ -19,11 +19,11 @@ const showingNavigationDropdown = ref(false);
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                            <div class="shrink-0 flex items-center pr-12">
+                                <Link :href="route('dashboard')" class="flex items-center">
                                     <ApplicationLogo
-                                        class="block h-9 w-auto fill-current text-gray-800"
-                                    />
+                                        class="block h-12 w-auto fill-current text-gray-800 mr-2"
+                                    /><span>Online PCR</span>
                                 </Link>
                             </div>
 
@@ -31,6 +31,12 @@ const showingNavigationDropdown = ref(false);
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('irsm')" :active="route().current('irsm')">
+                                    Individual Rating Scale
                                 </NavLink>
                             </div>
 
@@ -146,7 +152,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
                 </div>
             </header>

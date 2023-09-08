@@ -35,11 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+
+
+
+
 require __DIR__.'/auth.php';
-
-use App\Http\Controllers\PMS\RSM\RatingScaleMatrixController;
-
-Route::middleware('auth')->group(function () {
-    Route::get('/pms/rsm', [RatingScaleMatrixController::class, 'index'])
-        ->name('rsm');
-});
+require __DIR__.'/pms.php';
