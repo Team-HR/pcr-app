@@ -1,24 +1,7 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head } from "@inertiajs/vue3";
-
-import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
-
-// export default {
-//   props: {
-//     // periods: null,
-//   },
-//   components: {
-//     AuthLayout,
-//     PeriodSelector
-//   },
-//   data() {
-//     return {
-//       // period_id: null,
-//     };
-//   },
-//   mounted() { },
-// };
+  import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+  import { Head } from "@inertiajs/vue3";
+  import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
 </script>
 
 <template>
@@ -27,22 +10,19 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Rating Scale Matrix
+                Rating Scale Matrix / Period Selection
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <period-selector
-                            icon="bi bi-book"
-                            title="Department Rating Scale Matrix"
-                            description="Edit or review your Department/Section's Rating Scale Matrix"
-                            path="/pms/rsm/"
-                        ></period-selector>
-                    </div>
-                </div>
+                <period-selector
+                    icon="bi bi-book"
+                    
+                    title="Select Rating Period"
+                    description="Select rating period of rating scale matrix to edit"
+                    path="/pms/rsm/"
+                ></period-selector>
             </div>
         </div>
     </AuthenticatedLayout>
