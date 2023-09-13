@@ -35,6 +35,12 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('pcr')" :active="route().current('pcr')">
+                                    Performance Review
+                                </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('irsm')" :active="route().current('irsm')">
                                     Individual Rating Scale
                                 </NavLink>

@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/pms/irsm/{period_id}", [IndividualRatingScaleMatrixController::class, "show"]);
 
     # pcr
-    Route::get("/pms/pcr", [PcrController::class, "index"]);
+    Route::get("/pms/pcr", [PcrController::class, "index"])->name('pcr');
     Route::get("/pms/pcr/{period_id}", [PcrController::class, "show"]);
     Route::get("/pms/pcr/{period_id}/print/{form_status_id}", [PcrController::class, "print"]);
 
