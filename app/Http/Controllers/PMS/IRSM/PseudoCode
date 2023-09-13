@@ -1,0 +1,7 @@
+PseudoCode
+get mfos without parent_id
+sort asc
+append children array (recursive)
+   get children 
+   sort children
+

@@ -38,7 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/pms/rsm/{period_id}/mfo/{rsm_id}/si/{id}', [SuccessIndicatorController::class, "destroy"]);
 
     # individual rating scale matrix
-    Route::get("/pms/irsm", [IndividualRatingScaleMatrixController::class, "index"]);
+    Route::get("/pms/irsm", [IndividualRatingScaleMatrixController::class, "index"])->name('irsm');
     Route::get("/pms/irsm/{period_id}", [IndividualRatingScaleMatrixController::class, "show"]);
 
     # pcr

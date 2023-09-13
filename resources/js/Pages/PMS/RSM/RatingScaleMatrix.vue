@@ -23,7 +23,7 @@ import { Head } from "@inertiajs/vue3";
             </h2>
         </template>
 
-        <div class="py-1`"></div>
+        <div class="py-1"></div>
         <Card class="w-full">
             <template #title>
                 <!-- <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
