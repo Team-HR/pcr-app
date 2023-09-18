@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Pms\Pcr;
+namespace App\Http\Controllers\PMS\PCR;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pms\Pcr\PmsPcrStrategicFunctionData;
-use App\Models\PmsPeriod;
+use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
+use App\Models\PMS\PmsPeriod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;

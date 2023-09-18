@@ -44,7 +44,7 @@ class PcrController extends Controller
 
         return Redirect::back();
         // return $update;
-        // return Inertia::render("Pms/Pcr/Index", ["periods" => $periods]);
+        // return Inertia::render("PMS/PCR/Index", ["periods" => $periods]);
     }
 
     public function show($period_id)
@@ -83,14 +83,15 @@ class PcrController extends Controller
             $form_status["strat_total_average_rating"] +
             $form_status["support_total_average_rating"], 1, 2);
 
-        return Inertia::render("Pms/Pcr/Form", ["period" => $period, "form_status" => $form_status]);
+        // return "test";
+        return Inertia::render("PMS/PCR/Form", ["period" => $period, "form_status" => $form_status]);
     }
 
     public function show_form_type($period_id, $id)
     {
         $period = PmsPeriod::find($period_id);
         $form_type = PmsPcrStatus::find($id);
-        return Inertia::render("Pms/Pcr/FormType", ["period" => $period, "form_type" => $form_type]);
+        return Inertia::render("PMS/PCR/FormType", ["period" => $period, "form_type" => $form_type]);
     }
 
     public function set_form_type($period_id, $id, Request $request)
@@ -116,7 +117,7 @@ class PcrController extends Controller
         $period = PmsPeriod::find($period_id);
         $employees = SysEmployee::orderBy('last_name')->get()->toArray();
         $form_type = PmsPcrStatus::find($id);
-        return Inertia::render("Pms/Pcr/Signatories", ["period" => $period, "form_type" => $form_type, "employees" => $employees]);
+        return Inertia::render("PMS/PCR/Signatories", ["period" => $period, "form_type" => $form_type, "employees" => $employees]);
     }
 
     public function set_signatories($period_id, $id, Request $request)
@@ -154,7 +155,7 @@ class PcrController extends Controller
         $support_functions = $support_functions;
         // return $support_function;
 
-        return Inertia::render("Pms/Pcr/Print", [
+        return Inertia::render("PMS/PCR/Print", [
             "form_status" => $form_status,
             "strategic_function" =>  $strategic_function,
             "core_functions" => $core_functions,

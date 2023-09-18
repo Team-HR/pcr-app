@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Pms\Pcr;
+namespace App\Http\Controllers\PMS\PCR;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pms\Pcr\PmsPcrCoreFunctionData;
-use App\Models\Pms\Pcr\PmsPcrStrategicFunctionData;
-use App\Models\Pms\Pcr\PmsPcrStatus;
-use App\Models\PmsPeriod;
-use App\Models\Pms\Rsm\PmsRsm;
-use App\Models\Pms\Rsm\PmsRsmAssignment;
-use App\Models\Pms\Rsm\PmsRsmSuccessIndicator;
-use App\Models\Pms\Pcr\PmsPcrCoreFunctionDataCorrection;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionData;
+use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
+use App\Models\PMS\PCR\PmsPcrStatus;
+use App\Models\PMS\PmsPeriod;
+use App\Models\PMS\RSM\PmsRsm;
+use App\Models\PMS\RSM\PmsRsmAssignment;
+use App\Models\PMS\RSM\PmsRsmSuccessIndicator;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionDataCorrection;
 use App\Models\SysEmployee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -38,7 +38,7 @@ class CoreFunctionController extends Controller
         }
         # get mfo ids
         $mfo_ids = [];
-        // return $success_indicator_ids;
+        return $success_indicator_ids;
         foreach ($success_indicator_ids as $success_indicator_id) {
             $mfo = PmsRsmSuccessIndicator::find($success_indicator_id);
             $mfo_id = $mfo->pms_rsm_id;
@@ -247,14 +247,19 @@ class CoreFunctionController extends Controller
         # get mfo ids
         $mfo_ids = [];
         // return $success_indicator_ids;
+        // return $success_indicator_ids;
+
+        $test = [];
         foreach ($success_indicator_ids as $success_indicator_id) {
             $mfo = PmsRsmSuccessIndicator::find($success_indicator_id);
-            $mfo_id = $mfo->pms_rsm_id;
-            if (!in_array($mfo_id, $mfo_ids)) {
-                $mfo_ids[] = $mfo_id;
-            }
+            $test [] = $mfo;
+            // $mfo_id = $mfo->pms_rsm_id;
+            // if (!in_array($mfo_id, $mfo_ids)) {
+            //     $mfo_ids[] = $mfo_id;
+            // }
         }
         # get mfo data and parents as well
+        return $test;
         $mfos = [];
 
         foreach ($mfo_ids as $key => $mfo_id) {

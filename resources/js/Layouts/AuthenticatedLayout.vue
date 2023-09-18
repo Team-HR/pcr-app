@@ -23,7 +23,7 @@ const showingNavigationDropdown = ref(false);
                                 <Link :href="route('dashboard')" class="flex items-center">
                                     <ApplicationLogo
                                         class="block h-12 w-auto fill-current text-gray-800 mr-2"
-                                    /><span>Online PCR</span>
+                                    /><span>Online SPMS</span>
                                 </Link>
                             </div>
 

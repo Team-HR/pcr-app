@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Pms\Pcr;
+namespace App\Http\Controllers\PMS\PCR;
 
 use App\Http\Controllers\Controller;
-use App\Models\Pms\Pcr\PmsPcrSupportFunction;
-use App\Models\Pms\Pcr\PmsPcrSupportFunctionData;
-use App\Models\Pms\Pcr\PmsPcrStatus;
-use App\Models\PmsPeriod;
+use App\Models\PMS\PCR\PmsPcrSupportFunction;
+use App\Models\PMS\PCR\PmsPcrSupportFunctionData;
+use App\Models\PMS\PCR\PmsPcrStatus;
+use App\Models\PMS\PmsPeriod;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
