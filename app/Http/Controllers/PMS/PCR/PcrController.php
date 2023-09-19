@@ -84,7 +84,8 @@ class PcrController extends Controller
             $form_status["support_total_average_rating"], 1, 2);
 
         // return "test";
-        return Inertia::render("PMS/PCR/Form", ["period" => $period, "form_status" => $form_status]);
+        // return Inertia::render("PMS/PCR/Form", ["period" => $period, "form_status" => $form_status]);
+        return Inertia::render("PMS/PCR/FormStatus", ["period" => $period, "form_status" => $form_status]);
     }
 
     public function show_form_type($period_id, $id)

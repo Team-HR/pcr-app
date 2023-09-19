@@ -1,100 +1,126 @@
-<style scoped>
-table,
-th,
-td {
-    font-size: 14px;
-    padding: 5px;
-    border: 0.5px solid rgb(185, 185, 185);
-    border-collapse: collapse;
-}
-</style>
+<script setup>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { Head } from "@inertiajs/vue3";
+</script>
 
 <template>
-    <!-- <auth-layout> -->
-    <Card class="w-full">
-        <template #title>
-            <Button
-                label="Back"
-                class="p-button-sm p-button-raised p-button-text mb-3"
-                icon="bi bi-arrow-left"
-                @click="go_back()"
-            ></Button>
-            <br />
-            <span
-                ><i class="bi bi-book mr-2"></i> PERFORMANCE COMMITMENT AND
-                REVIEW</span
-            ></template
-        >
-        <template #subtitle>
-            <span class="text-xl"
-                >{{ $page.props.auth.user.sys_department_name }} (
-                {{ period.period }}, {{ period.year }})</span
-            >
-            <br />
-            Accomplish/Review your Performance Commitments</template
-        >
-        <template #content>
-            <table class="">
-                <!-- <thead>
+    <Head title="Form Status | PCR" />
+
+    <AuthenticatedLayout>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                PCR / Form Status
+            </h2>
+        </template>
+        <div class="py-2">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <Card class="w-full">
+                    <template #title>
+                        <!-- <Button
+                        label="Back"
+                        class="p-button-sm p-button-raised p-button-text mb-3"
+                        icon="bi bi-arrow-left"
+                        @click="go_back()"
+                    ></Button>
+                    <br /> -->
+                        <div class="">
+                            <span
+                                ><i class="bi bi-book mr-2"></i> PERFORMANCE
+                                COMMITMENT AND REVIEW</span
+                            >
+                        </div>
+                    </template>
+                    <template #subtitle>
+                        <div class="">
+                            {{ $page.props.auth.user.sys_department_name }} (
+                            {{ period.period }}, {{ period.year }})
+                        </div>
+                        <div class="">
+                            Accomplish/Review your Performance Commitments
+                        </div>
+                    </template>
+                    <template #content>
+                        <div class="flex justify-content-center">
+                            <table class="">
+                                <!-- <thead>
             <tr>
               <th>Option</th>
               <th>Form</th>
               <th>Status</th>
             </tr>
           </thead> -->
-                <tr v-for="(item, i) in items" :key="i">
-                    <td v-if="!form_status.is_submitted">
-                        <!--  -->
-                        <Button
-                            @click="
-                                $inertia.get(item.href, {}, { replace: true })
-                            "
-                            :label="item.b_label ? item.b_label : 'Edit'"
-                            class="p-button-sm"
-                            :disabled="item.is_disabled"
-                        ></Button>
-                        <!-- submit button start-->
-                        <!-- <Button v-else @click="submit(item)" :label="item.b_label ? item.b_label : 'Submit'" class="p-button-sm"
+                                <tr v-for="(item, i) in items" :key="i">
+                                    <td v-if="!form_status.is_submitted">
+                                        <!--  -->
+                                        <Button
+                                            @click="
+                                                $inertia.get(
+                                                    item.href,
+                                                    {},
+                                                    { replace: true }
+                                                )
+                                            "
+                                            :label="
+                                                item.b_label
+                                                    ? item.b_label
+                                                    : 'Edit'
+                                            "
+                                            class="p-button-sm w-full"
+                                            text
+                                            :disabled="item.is_disabled"
+                                        ></Button>
+                                        <!-- submit button start-->
+                                        <!-- <Button v-else @click="submit(item)" :label="item.b_label ? item.b_label : 'Submit'" class="p-button-sm"
                       :disabled="item.is_disabled"></Button> -->
-                        <!-- submit button end-->
-                    </td>
-                    <td>{{ item.label }}</td>
-                    <td class="" v-html="item.status"></td>
-                </tr>
+                                        <!-- submit button end-->
+                                    </td>
+                                    <td width="200px">
+                                        <span class="ml-3">{{
+                                            item.label
+                                        }}</span>
+                                    </td>
+                                    <td class="" v-html="item.status"></td>
+                                </tr>
 
-                <tr>
-                    <td v-if="!form_status.is_submitted">
-                        <!-- {{ form_status }} -- {{ form_status.is_submitted }} -->
+                                <tr>
+                                    <td v-if="!form_status.is_submitted">
+                                        <!-- {{ form_status }} -- {{ form_status.is_submitted }} -->
+                                        <Button
+                                            label="Submit"
+                                            class="p-button-sm w-full"
+                                            @click="submit"
+                                            :disabled="checkIfSubmittable"
+                                            text
+                                        ></Button>
+                                    </td>
+                                    <td>
+                                        <span class="ml-3">
+                                            {{
+                                                !form_status.is_submitted
+                                                    ? "Submit & Finalize"
+                                                    : "Submitted"
+                                            }}
+                                        </span>
+                                    </td>
+                                    <td v-html="submit_status_text"></td>
+                                </tr>
+                            </table>
+                        </div>
                         <Button
-                            label="Submit"
-                            class="p-button-sm"
-                            @click="submit"
-                            :disabled="checkIfSubmittable"
+                            label="Print Form"
+                            icon="bi bi-print"
+                            v-if="form_status.is_submitted"
+                            class="mt-2"
+                            @click="printForm()"
                         ></Button>
-                    </td>
-                    <td>
-                        {{
-                            !form_status.is_submitted
-                                ? "Submit & Finalize"
-                                : "Submitted"
-                        }}
-                    </td>
-                    <td v-html="submit_status_text"></td>
-                </tr>
-            </table>
-
-            <Button
-                label="Print Form"
-                icon="bi bi-print"
-                v-if="form_status.is_submitted"
-                class="mt-2"
-                @click="printForm()"
-            ></Button>
-        </template>
-    </Card>
-    <Toast />
-    <!-- </auth-layout> -->
+                    </template>
+                </Card>
+            </div>
+            <Toast />
+        </div>
+    </AuthenticatedLayout>
 </template>
+
 <script>
 // import AuthLayout from "@/Layouts/Authenticated";
 import { router } from "@inertiajs/vue3";
@@ -149,30 +175,30 @@ export default {
                             .signatories_inputs.immediate_supervisor
                             ? this.form_status.signatories_inputs
                                   .immediate_supervisor.full_name
-                            : "_________";
+                            : "";
                         department_head = this.form_status.signatories_inputs
                             .department_head
                             ? this.form_status.signatories_inputs
                                   .department_head.full_name
-                            : "_________";
+                            : "";
                     } else {
                         immediate_supervisor = this.form_status
                             .signatories_inputs.immediate_supervisor
                             ? this.form_status.signatories_inputs
                                   .immediate_supervisor
-                            : "_________";
+                            : "";
                         department_head = this.form_status.signatories_inputs
                             .department_head
                             ? this.form_status.signatories_inputs
                                   .department_head
-                            : "_________";
+                            : "";
                     }
                     head_of_agency = this.form_status.signatories_inputs
                         .head_of_agency
                         ? this.form_status.signatories_inputs.head_of_agency
-                        : "_________";
-                    return `Immediate Supervisor: <b class="text-green-700_ mr-3"> ${immediate_supervisor}</b>
-                    Department Head:<b class="text-green-700_ mr-3"> ${department_head}</b> Head of Agency: <b class="text-green-700_">${head_of_agency}</b>`;
+                        : "";
+                    return `Immediate Supervisor: <b class="text-green-700_ mr-3"> ${immediate_supervisor}</b> <br/>
+                    Department Head:<b class="text-green-700_ mr-3"> ${department_head}</b> <br/> Head of Agency: <b class="text-green-700_">${head_of_agency}</b>`;
                 })(),
                 is_disabled: !this.form_status.agency ? true : false,
             },
@@ -275,7 +301,7 @@ export default {
             var total_average_rating = this.form_status.overall_numerical_rating
                 ? this.form_status.overall_numerical_rating
                 : "_________";
-            return `Total Percentage Weight (%): <b class="text-green-700_ mr-3">${total_percentage_weight}%</b>Total Numerical Rating: <b class="text-green-700_ mr-3">${total_average_rating}</b>`;
+            return `Total Percentage Weight (%): <b class="text-green-700_ mr-3">${total_percentage_weight}%</b>Final Numerical Rating: <b class="text-green-700_ mr-3">${total_average_rating}</b>`;
         },
 
         checkIfSubmittable() {
@@ -294,6 +320,12 @@ export default {
     },
 
     methods: {
+        isActive(item) {
+            return item.route
+                ? this.$router.resolve(item.route).path === this.$route.path
+                : false;
+        }, // DELETE AFTER TESTING
+
         printForm() {
             router.get(this.current_url + "/print/" + this.form_status.id);
         },
@@ -324,7 +356,7 @@ export default {
 
     mounted() {
         router.reload({ only: ["form_status"] });
-        // console.log(this.form_status);
+        console.log(this.form_status);
     },
 };
 </script>
