@@ -226,6 +226,28 @@ export default {
             },
             {
                 no: 4,
+                href: this.current_url + "/support_functions",
+                label: "Support Function",
+                status: (() => {
+                    if (!this.form_status.agency) return "Set Form Type first!";
+                    var total_percentage_weight = this.form_status
+                        .support_total_percentage_weight
+                        ? this.form_status.support_total_percentage_weight
+                        : "_________";
+                    var total_average_rating =
+                        this.form_status.support_total_average_rating &&
+                        this.form_status.support_total_average_rating != "0.00"
+                            ? this.form_status.support_total_average_rating
+                            : "_________";
+                    return this.status_text(
+                        total_percentage_weight,
+                        total_average_rating
+                    );
+                })(),
+                is_disabled: !this.form_status.agency ? true : false,
+            },
+            {
+                no: 5,
                 href:
                     this.current_url +
                     "/strategic_function/" +
@@ -248,28 +270,7 @@ export default {
                 })(),
                 is_disabled: !this.form_status.agency ? true : false,
             },
-            {
-                no: 5,
-                href: this.current_url + "/support_functions",
-                label: "Support Function",
-                status: (() => {
-                    if (!this.form_status.agency) return "Set Form Type first!";
-                    var total_percentage_weight = this.form_status
-                        .support_total_percentage_weight
-                        ? this.form_status.support_total_percentage_weight
-                        : "_________";
-                    var total_average_rating =
-                        this.form_status.support_total_average_rating &&
-                        this.form_status.support_total_average_rating != "0.00"
-                            ? this.form_status.support_total_average_rating
-                            : "_________";
-                    return this.status_text(
-                        total_percentage_weight,
-                        total_average_rating
-                    );
-                })(),
-                is_disabled: !this.form_status.agency ? true : false,
-            },
+
             // {
             //   no: 6,
             //   href: "/api/" + this.current_url + "/submit",
