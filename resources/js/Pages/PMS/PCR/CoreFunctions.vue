@@ -756,7 +756,6 @@ export default {
             this.clear_accomplishment();
         },
         edit_not_applicable(row) {
-            console.log(row);
             this.accomplishment.id = row.pms_pcr_core_function_data.id;
             this.accomplishment.pms_rsm_success_indicator_id =
                 row.pms_rsm_success_indicator_id;
@@ -814,6 +813,7 @@ export default {
             });
         },
         add_accomplishment(row) {
+            console.log(row);
             this.core_function = row;
             this.accomplishment.id = null;
             this.accomplishment.pms_rsm_success_indicator_id =
@@ -825,6 +825,7 @@ export default {
             this.clear_accomplishment();
         },
         edit_accomplishment(row) {
+            
             this.core_function = row;
             this.accomplishment.id = row.pms_pcr_core_function_data.id;
             this.accomplishment.pms_rsm_success_indicator_id =

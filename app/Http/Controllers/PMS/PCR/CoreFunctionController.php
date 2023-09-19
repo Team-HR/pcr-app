@@ -23,6 +23,7 @@ class CoreFunctionController extends Controller
         $sys_employee_id = auth()->user()->sys_employee_id;
         $data = $this->get_row_data($period_id, $id, $sys_employee_id);
         // return $data["rows"];
+
         return Inertia::render("PMS/PCR/CoreFunctions", ["period" => $data["period"], "form_status" => $data["form_status"], "rows" => $data["rows"], "total_percentage_weight" => $data["total_percentage_weight"], "total_average_rating" => $data["total_average_rating"]]);
     }
 
@@ -66,12 +67,77 @@ class CoreFunctionController extends Controller
     {
         $period = PmsPeriod::find($period_id);
 
-        $rows = $this->get_rows($period_id, $sys_employee_id);
+        $mfos = $this->get_rows($period_id, $sys_employee_id);
+
+        $rows = [];
+
+        foreach ($mfos as $row) {
+            $level = get_level(0, $row["parent_id"]);
+            $rowspan = 0;
+            $si_only = false;
+            $success_indicators = get_success_indicators($row["id"]);
+            $success_indicators_count = count($success_indicators);
+            $rowspan = $success_indicators_count > 1 ? $success_indicators_count : 0;
+            $datum = [
+                "pms_rsm_id" => $row["id"],
+                "parent_id" => $row["parent_id"],
+                "level" => $level,
+                "rowspan" => $rowspan,
+                "mfo_only" => true,
+                "si_only" => $si_only,
+                "code" => $row["code"],
+                "title" => $row["title"],
+            ];
+
+            # if no success indicators
+            if ($success_indicators_count < 1) {
+                $rows[] = $datum;
+            } else {
+                # if there is/are success indicators
+                $datum["mfo_only"] = false;
+                foreach ($success_indicators as $key => $success_indicator) {
+                    if ($key > 0) {
+                        $datum["si_only"] = true;
+                    }
+
+                    $quality = $success_indicator["quality"];
+                    $efficiency = $success_indicator["efficiency"];
+                    $timeliness = $success_indicator["timeliness"];
+
+                    $performance_measures = [];
+
+                    if ($quality) {
+                        $performance_measures[] = "Quality";
+                    }
+                    if ($efficiency) {
+                        $performance_measures[] = "Efficiency";
+                    }
+                    if ($timeliness) {
+                        $performance_measures[] = "Timeliness";
+                    }
+
+                    $in_charges = PmsRsmAssignment::where("pms_rsm_success_indicator_id", $success_indicator["id"])->get();
+
+                    $success_indicator_datum = [
+                        "pms_rsm_success_indicator_id" => $success_indicator["id"],
+                        "success_indicator" => $success_indicator["success_indicator"],
+                        "performance_measures" => $performance_measures,
+                        "quality" => $quality,
+                        "efficiency" => $efficiency,
+                        "timeliness" => $timeliness,
+                        "pms_pcr_core_function_data" => get_pms_pcr_core_function_data($success_indicator["id"])
+                    ];
+                    $rows[] = array_merge($datum, $success_indicator_datum);
+                }
+            }
+        }
+
+
 
         $period = PmsPeriod::find($period_id);
         $form_status = PmsPcrStatus::find($pms_pcr_status_id);
-        $total_percentage_weight = null; //get_total_percentage_weight($rows);
-        $total_average_rating = null; //get_total_average_rating($rows);
+        $total_percentage_weight = get_total_percentage_weight($rows);
+        $total_average_rating = get_total_average_rating($rows);
         $strat = get_strat_data($period_id, $sys_employee_id);
 
         return ["period" => $period, "form_status" => $form_status, "rows" => $rows, "total_percentage_weight" => $total_percentage_weight, "total_average_rating" => $total_average_rating, "strat_total_percentage_weight" => $strat["total_percentage_weight"], "strat_total_average_rating" => $strat["total_average_rating"]];
@@ -80,7 +146,7 @@ class CoreFunctionController extends Controller
     public function create_update($period_id, $id = 0, Request $request)
     {
         $pms_pcr_status = $request->form_status;
-        // return  $request;
+        // return  $request->all();
         $sys_employee_id = $pms_pcr_status["sys_employee_id"];
         // return $sys_employee_id;
         $auth_sys_employees_id = auth()->user()->sys_employee_id;
@@ -150,6 +216,8 @@ class CoreFunctionController extends Controller
 
     /*
         Core functions edtor 
+        Used only in API for CoreFunctionsEditor.vue and FormComponent.vue
+        DISREGARD IF COMPONENTS ARE NOT USED 
     */
     public function get_core_functions_rows($period_id, $pms_pcr_status_id, $sys_employee_id)
     {
@@ -502,7 +570,7 @@ function GET_SORTED_RSM_ROWS($mfos)
                 $in_charges = PmsRsmAssignment::where("pms_rsm_success_indicator_id", $success_indicator["id"])->get();
 
                 $success_indicator_datum = [
-                    "success_indicator_id" => $success_indicator["id"],
+                    "pms_rsm_success_indicator_id" => $success_indicator["id"],
                     "success_indicator" => $success_indicator["success_indicator"],
                     "performance_measures" => $performance_measures,
                     "quality" => $quality,
