@@ -20,7 +20,7 @@ class SupportFunctionController extends Controller
         $rows = [];
         $sys_employee_id = auth()->user()->sys_employee_id;
         $support_function_data = $this->get_support_function_rows($sys_employee_id, $pms_period_id);
-        return Inertia::render("Pms/Pcr/SupportFunctions", [
+        return Inertia::render("PMS/PCR/SupportFunctions", [
             "period" => $period, "rows" => $support_function_data["data"],
             "total_numerical_rating" => $support_function_data["total_numerical_rating"],
             "total_percentage_weight" => $support_function_data["total_percentage_weight"]
