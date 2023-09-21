@@ -23,7 +23,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     # rating scale matrix
-    Route::get('/pms/rsm', [RatingScaleMatrixController::class, "index"]) ->name('rsm');
+    Route::get('/pms/rsm', [RatingScaleMatrixController::class, "index"])->name('rsm');
 
     Route::get('/pms/rsm/{period_id}', [RatingScaleMatrixController::class, "show"])->name("rsm.show");
     Route::post('/pms/rsm/{period_id}', [RatingScaleMatrixController::class, "create"]);
@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
     # pcr
 
-    
+
     Route::get("/pms/pcr", [PcrController::class, "index"])->name('pcr');
     Route::get("/pms/pcr/{period_id}", [PcrController::class, "show"]);
     Route::get("/pms/pcr/{period_id}/print/{form_status_id}", [PcrController::class, "print"]);
@@ -88,10 +88,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/pms/settings/periods", [SettingsController::class, "periods"]);
     Route::post("/pms/settings/periods/create", [SettingsController::class, "create_period"]);
     Route::get("/pms/settings/support_functions", [SettingsController::class, "support_functions"]);
-    // /pms/settings/support_functions
     Route::get("/pms/settings/support_functions/{id}", [SettingsController::class, "support_functions_setup"]);
     Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "get_support_functions"]);
-    // /pms/settings/support_functions/19
-    // Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "support_functions_setup_create"]);
+    Route::delete("/pms/settings/support_function/{id}", [SettingsController::class, "delete_support_function"]);
+    Route::post("/pms/settings/support_functions/{id}/getSimilarRatingScaleMeasures", [SettingsController::class, "get_similar_rating_scale_measures"]);
     Route::post("/pms/settings/support_functions/{id}/create", [SettingsController::class, "support_functions_setup_create_update"]);
 });
