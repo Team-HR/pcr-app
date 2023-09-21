@@ -16,45 +16,76 @@ import Card from "primevue/card";
 
             <div v-if="!periods" class="w-full flex justify-center">
                 <!-- <Skeleton width="4rem" height="2rem"></Skeleton> -->
-                <Skeleton style="width: 540px; height: 200px;"></Skeleton>
+                <Skeleton style="width: 540px; height: 200px"></Skeleton>
                 <!-- <div class="bg-gray-400" style="width: 540px; height: 200px;"></div> -->
             </div>
-            <DataTable
-                :value="periods"
-                responsiveLayout="scroll"
-                class="w-6 mx-auto"
-                :hidden="!periods"
-            >
-                <Column field="year" header="Year">
-                    <template #body="slotProp">
-                        <span class="text-xl font-bold">{{
-                            slotProp.data.year
-                        }}</span>
-                    </template>
-                </Column>
-                <Column field="period1" header="1st Semester">
-                    <template #body="slotProp">
-                        <!-- {{ slotProp.data }} -->
-                        <Button
-                            v-if="slotProp.data.period1"
-                            class="p-button hover:bg-primary-900 bg-primary-600 m-2 p-3 p-button-raised"
-                            label="January - June"
-                            @click="$inertia.get(path + slotProp.data.period1)"
-                        />
-                    </template>
-                </Column>
-                <Column field="period2" header="2nd Semester">
-                    <template #body="slotProp">
-                        <!-- {{ slotProp.data }} -->
-                        <Button
-                            v-if="slotProp.data.period2"
-                            class="p-button hover:bg-red-900 bg-red-600 m-2 p-3 p-button-raised"
-                            label="July - December"
-                            @click="$inertia.get(path + slotProp.data.period2)"
-                        />
-                    </template>
-                </Column>
-            </DataTable>
+
+            <div class="w-full flex justify-center">
+                <DataTable
+                    :value="periods"
+                    responsiveLayout="scroll"
+                    class="p-datatable-small w-6"
+                    :hidden="!periods"
+                >
+                    <Column field="year">
+                        <template #header>
+                            <div class="w-full text-center">Year</div>
+                        </template>
+                        <template #body="slotProp">
+                            <div class="text-center">
+                                <span class="text-xl font-bold">{{
+                                    slotProp.data.year
+                                }}</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="period1">
+                        <template #header>
+                            <div class="w-full text-center">1st Semester</div>
+                        </template>
+                        <template #body="slotProp">
+                            <div class="w-full flex justify-content-center">
+                                <Button
+                                    v-if="slotProp.data.period1"
+                                    icon="pi pi-calendar"
+                                    severity="info"
+                                    label="January - June"
+                                    @click="
+                                        $inertia.get(
+                                            path + slotProp.data.period1
+                                        )
+                                    "
+                                    text
+                                    raised
+                                />
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="period2">
+                        <template #header bodyClass="text-green-700">
+                            <div class="w-full text-center">2nd Semester</div>
+                        </template>
+                        <template #body="slotProp">
+                            <!-- {{ slotProp.data }} -->
+                            <div class="w-full flex justify-content-center">
+                                <Button
+                                    v-if="slotProp.data.period2"
+                                    icon="pi pi-calendar"
+                                    severity="danger"
+                                    label="July - December"
+                                    @click="
+                                        $inertia.get(
+                                            path + slotProp.data.period2
+                                        )
+                                    "
+                                    text
+                                    raised
+                                />
+                            </div>
+                        </template>
+                    </Column>
+                </DataTable>
+            </div>
         </template>
         <template v-else #content>
             <p class="text-red-700">
