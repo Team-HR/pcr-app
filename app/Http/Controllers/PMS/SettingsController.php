@@ -141,9 +141,11 @@ class SettingsController extends Controller
         $timeliness = measureIsNotEmpty($timeliness) ? $timeliness : [];
 
         if (!$id) {
-            // pms_pcr_support_functions
+            // create new PmsPcrSupportFunction
+            $last_order_num = get_last_order_num($period_id, $form_type["code"]);
             $supportFunction = new PmsPcrSupportFunction();
             $supportFunction->pms_period_id = $period_id;
+            $supportFunction->order_num = $last_order_num;
             $supportFunction->support_function = $support_function;
             $supportFunction->success_indicator = $success_indicator;
             $supportFunction->quality = $quality;
@@ -153,6 +155,7 @@ class SettingsController extends Controller
             $supportFunction->form_type = $form_type["code"];
             $supportFunction->save();
         } else {
+            // update PmsPcrSupportFunction
             $supportFunction = PmsPcrSupportFunction::find($id);
             $supportFunction->support_function = $support_function;
             $supportFunction->success_indicator = $success_indicator;
@@ -168,11 +171,47 @@ class SettingsController extends Controller
 
     public function get_support_functions($period_id, Request $request)
     {
-        $supportFunctions = PmsPcrSupportFunction::where("pms_period_id", $period_id)->where("form_type", $request->form_type["code"])->get();
+        $supportFunctions = PmsPcrSupportFunction::where("pms_period_id", $period_id)->where("form_type", $request->form_type["code"])->orderBy('order_num')->get();
         return $supportFunctions;
     }
+
+
+    public function move($period_id, Request $request)
+    {
+        // return $request->to;
+        $supportFunctions = PmsPcrSupportFunction::where('pms_period_id', $period_id)->where('form_type', $request->form_type['code'])->orderBy('order_num')->get();
+
+        $newOrderedsupportFunctions = [];
+        foreach ($supportFunctions as $supportFunction) {
+            $newOrderedsupportFunctions[] = $supportFunction;
+        }
+
+        moveElement($newOrderedsupportFunctions, $request->from, $request->to);
+
+        foreach ($newOrderedsupportFunctions as $key => $function) {
+            $PmsPcrSupportFunction = PmsPcrSupportFunction::find($function['id']);
+            $PmsPcrSupportFunction->order_num = $key;
+            $PmsPcrSupportFunction->save();
+        }
+
+        return [$supportFunctions, $newOrderedsupportFunctions];
+    }
+
+    // public function test()
+    // {
+    //     $period_id = 11;
+    //     $form_type = 'ipcr';
+
+    //     return get_last_order_num($period_id, $form_type);
+    // }
+
 }
 
+function moveElement(&$array, $a, $b)
+{
+    $out = array_splice($array, $a, 1);
+    array_splice($array, $b, 0, $out);
+}
 
 function measureIsNotEmpty($arr)
 {
@@ -182,4 +221,11 @@ function measureIsNotEmpty($arr)
         }
     }
     return false;
+}
+
+
+function get_last_order_num($period_id, $form_type)
+{
+    $supportFunction = PmsPcrSupportFunction::where('pms_period_id', $period_id)->where('form_type', $form_type)->orderByDesc('order_num')->first();
+    return $supportFunction ? $supportFunction['order_num'] + 1 : 0;
 }

@@ -50,9 +50,31 @@ import { Head } from "@inertiajs/vue3";
                 </h3> -->
                         <!-- {{ percentTotal }} -->
                         <DataTable
+                            :loading="is_loading"
                             class="p-datatable-small"
                             :value="supportFunctions"
                         >
+                            <Column header="Arrange" class="text-center">
+                                <template #body="{ data, index }">
+                                    <div class="w-full flex flex-nowrap">
+                                        <Button
+                                            icon="pi pi-angle-up"
+                                            text
+                                            size="small"
+                                            class="mr-2"
+                                            @click="move('up', index, data.id)"
+                                        />
+                                        <Button
+                                            icon="pi pi-angle-down"
+                                            text
+                                            size="small"
+                                            @click="
+                                                move('down', index, data.id)
+                                            "
+                                        />
+                                    </div>
+                                </template>
+                            </Column>
                             <Column
                                 field="percent"
                                 :header="`(${percentTotal}%) Weight`"
@@ -386,6 +408,7 @@ export default {
                 form_type: {},
             }),
             addDialog: false,
+            is_loading: null,
             supportFunctions: [],
             formTypes: [
                 { name: "IPCR", code: "ipcr" },
@@ -419,15 +442,43 @@ export default {
         },
     },
     methods: {
+        move(direction, curr_index, id) {
+            const last_index = this.supportFunctions
+                ? this.supportFunctions.length - 1
+                : 0;
+            let new_index = 0;
+
+            if (direction == "up") {
+                new_index = curr_index > 0 ? curr_index - 1 : 0;
+            } else {
+                new_index =
+                    curr_index < last_index ? curr_index + 1 : last_index;
+            }
+
+            this.is_loading = true;
+            axios
+                .post(this.current_url + "/move", {
+                    form_type: this.form.form_type,
+                    direction: direction,
+                    id: id,
+                    from: curr_index,
+                    to: new_index,
+                })
+                .then(({ data }) => {
+                    this.getSupportFunctions().then(() => {});
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        },
         prompt_delete(row) {
-            // console.log("/pms/settings/support_function/" + row.id);
-            // return false;
             this.$confirm.require({
                 message: "Are you sure you want to delete this record?",
                 header: "Delete Confirmation",
                 icon: "pi pi-info-circle",
                 acceptClass: "p-button-danger",
                 accept: () => {
+                    this.is_loading = true;
                     this.$inertia.delete(
                         "/pms/settings/support_function/" + row.id,
                         {
@@ -439,7 +490,7 @@ export default {
                                     detail: "Support function deleted!",
                                     life: 3000,
                                 });
-                                this.getSupportFunctions();
+                                this.getSupportFunctions().then();
                             },
                         }
                     );
@@ -516,14 +567,16 @@ export default {
             this.form.percent = null;
         },
 
-        getSupportFunctions() {
+        async getSupportFunctions() {
             const form_type = this.form.form_type;
-            axios
+            this.is_loading = true;
+            await axios
                 .post(this.current_url, {
                     form_type: form_type,
                 })
                 .then(({ data }) => {
                     this.supportFunctions = data;
+                    this.is_loading = false;
                 })
                 .catch((err) => {
                     console.error(err);

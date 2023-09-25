@@ -92,5 +92,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "get_support_functions"]);
     Route::delete("/pms/settings/support_function/{id}", [SettingsController::class, "delete_support_function"]);
     Route::post("/pms/settings/support_functions/{id}/getSimilarRatingScaleMeasures", [SettingsController::class, "get_similar_rating_scale_measures"]);
+    Route::post("/pms/settings/support_functions/{id}/move", [SettingsController::class, "move"]);
     Route::post("/pms/settings/support_functions/{id}/create", [SettingsController::class, "support_functions_setup_create_update"]);
 });
