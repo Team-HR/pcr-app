@@ -185,7 +185,8 @@ import { Head } from "@inertiajs/vue3";
                                 </td>
                             </tr>
                         </table>
-                        <label class="font-bold text-xl my-2"
+                        <div class="mt-3"></div>
+                        <label class="font-bold text-xl"
                             >Actual Accomplishment:</label
                         >
 
@@ -199,21 +200,28 @@ import { Head } from "@inertiajs/vue3";
                         />
 
                         <MeasureSelector
-                            v-if="editAccomplishment.quality_options"
+                            class="mt-2"
+                            v-if="editAccomplishment.quality_options.length > 0"
                             name="Quality"
                             :options="editAccomplishment.quality_options"
                             v-model="editAccomplishment.quality"
                         />
 
                         <MeasureSelector
-                            v-if="editAccomplishment.efficiency_options"
+                            class="mt-2"
+                            v-if="
+                                editAccomplishment.efficiency_options.length > 0
+                            "
                             name="Efficiency"
                             :options="editAccomplishment.efficiency_options"
                             v-model="editAccomplishment.efficiency"
                         />
 
                         <MeasureSelector
-                            v-if="editAccomplishment.timeliness_options"
+                            class="mt-2"
+                            v-if="
+                                editAccomplishment.timeliness_options.length > 0
+                            "
                             name="Timeliness"
                             :options="editAccomplishment.timeliness_options"
                             v-model="editAccomplishment.timeliness"

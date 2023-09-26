@@ -179,7 +179,7 @@ function get_support_functions($sys_employee_id, $pms_period_id)
         $support_functions = PmsPcrSupportFunction::where(
             'form_type',
             $form_type
-        )->where('pms_period_id', $pms_period_id)->get();
+        )->where('pms_period_id', $pms_period_id)->orderBy('order_num')->get();
         $data = $support_functions;
     }
     return $data;
