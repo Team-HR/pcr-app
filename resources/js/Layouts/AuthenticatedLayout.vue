@@ -15,11 +15,11 @@ const showingNavigationDropdown = ref(false);
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto px-2 sm:px-3 lg:px-4">
                     <div class="flex justify-between h-16">
                         <div class="flex">
                             <!-- Logo -->
-                            <div class="shrink-0 flex items-center pr-12">
+                            <div class="shrink-0 flex items-center mr-5">
                                 <Link
                                     :href="route('dashboard')"
                                     class="flex items-center"
@@ -33,8 +33,9 @@ const showingNavigationDropdown = ref(false);
                             <!-- Navigation Links -->
                             <template v-for="(item, k) in items" :key="k">
                                 <div
-                                    class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
+                                    class="hidden space-x-0 sm:-my-px sm:ml-0 sm:flex"
                                 >
+                                    <Divider layout="vertical" class="mx-3" />
                                     <NavLink
                                         :href="route(item.route)"
                                         :active="checkIfActive(item.route)"
@@ -44,6 +45,7 @@ const showingNavigationDropdown = ref(false);
                                     </NavLink>
                                 </div>
                             </template>
+                            <Divider layout="vertical" class="mx-3"/>
                             <!-- Navigation Links -->
                         </div>
 
