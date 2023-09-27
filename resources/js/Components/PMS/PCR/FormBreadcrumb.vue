@@ -13,8 +13,8 @@
                     @click="
                         $inertia.get(
                             item.href,
-                            {}
-                            // { replace: true }
+                            {},
+                            { replace: true }
                         )
                     "
                 />

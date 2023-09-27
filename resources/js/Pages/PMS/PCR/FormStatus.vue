@@ -10,6 +10,7 @@ import { Head } from "@inertiajs/vue3";
     <AuthenticatedLayout>
         <template #header>
             <FormBreadcrumb
+                v-if="!form_status.is_submitted"
                 :period-id="this.period.id"
                 :form-status-id="this.form_status.id"
             />
@@ -62,8 +63,8 @@ import { Head } from "@inertiajs/vue3";
                                             @click="
                                                 $inertia.get(
                                                     item.href,
-                                                    {}
-                                                    // { replace: true }
+                                                    {},
+                                                    { replace: true }
                                                 )
                                             "
                                             :label="
