@@ -10,6 +10,7 @@ td {
 </style>
 
 <script setup>
+import FormBreadcrumb from "@/Components/PMS/PCR/FormBreadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 </script>
@@ -19,9 +20,10 @@ import { Head } from "@inertiajs/vue3";
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <FormBreadcrumb :period-id="this.period.id" :form-status-id="formStatusId" />
+            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 PCR / Form Status
-            </h2>
+            </h2> -->
         </template>
         <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -144,7 +146,6 @@ import { Head } from "@inertiajs/vue3";
     </AuthenticatedLayout>
 </template>
 <script>
-
 export default {
     props: {
         form_type: null,
@@ -162,6 +163,7 @@ export default {
                 agency: null,
                 form_type: null,
             }),
+            formStatusId: null,
         };
     },
     methods: {
@@ -211,7 +213,10 @@ export default {
             this.form.agency = this.form_type.agency;
             this.form.form_type = this.form_type.form_type;
         }
+        this.formStatusId = this.$inertia.page.url.split("/")[5]
     },
-    mounted() {},
+    mounted() {
+        
+    },
 };
 </script>

@@ -10,6 +10,7 @@ td {
 </style>
 
 <script setup>
+import FormBreadcrumb from "@/Components/PMS/PCR/FormBreadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 </script>
@@ -19,11 +20,15 @@ import { Head } from "@inertiajs/vue3";
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 PCR / Form Status
-            </h2>
+            </h2> -->
+            <FormBreadcrumb
+                :period-id="this.period.id"
+                :form-status-id="formStatusId"
+            />
         </template>
-        <div class="py-2">
+        <div class="p-3">
             <Card class="w-full">
                 <template #title>
                     <!-- <Button
@@ -489,7 +494,7 @@ import { Head } from "@inertiajs/vue3";
                                 colspan="11"
                                 style="text-align: center"
                             >
-                                No records found!
+                                No records found! Please setup the Rating Scale Matrix for this period.
                             </td>
                         </tr>
                     </table>
@@ -825,7 +830,6 @@ export default {
             this.clear_accomplishment();
         },
         edit_accomplishment(row) {
-            
             this.core_function = row;
             this.accomplishment.id = row.pms_pcr_core_function_data.id;
             this.accomplishment.pms_rsm_success_indicator_id =
@@ -921,6 +925,7 @@ export default {
     },
     created() {
         this.$inertia.reload({ only: ["rows"] });
+        this.formStatusId = this.$inertia.page.url.split("/")[5];
     },
     mounted() {},
 };

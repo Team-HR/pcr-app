@@ -58,7 +58,7 @@ class SupportFunctionController extends Controller
         return Redirect::back();
     }
 
-    public function delete_accomplishment($period_id, $accomplishment_id)
+    public function delete_accomplishment($period_id, $form_status_id, $accomplishment_id)
     {
         $accomplishment = PmsPcrSupportFunctionData::find($accomplishment_id);
         $accomplishment->delete();

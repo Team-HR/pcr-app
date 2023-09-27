@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import FormBreadcrumb from "@/Components/PMS/PCR/FormBreadcrumb.vue";
 import { Head } from "@inertiajs/vue3";
 </script>
 
@@ -8,10 +9,15 @@ import { Head } from "@inertiajs/vue3";
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <FormBreadcrumb
+                :period-id="this.period.id"
+                :form-status-id="this.form_status.id"
+            />
+            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 PCR / Form Status
-            </h2>
+            </h2> -->
         </template>
+
         <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <Card class="w-full">
@@ -56,8 +62,8 @@ import { Head } from "@inertiajs/vue3";
                                             @click="
                                                 $inertia.get(
                                                     item.href,
-                                                    {},
-                                                    { replace: true }
+                                                    {}
+                                                    // { replace: true }
                                                 )
                                             "
                                             :label="
@@ -226,7 +232,10 @@ export default {
             },
             {
                 no: 4,
-                href: this.current_url + "/support_functions",
+                href:
+                    this.current_url +
+                    "/support_functions/" +
+                    this.form_status.id,
                 label: "Support Function",
                 status: (() => {
                     if (!this.form_status.agency) return "Set Form Type first!";
@@ -338,7 +347,6 @@ export default {
             return `Percentage Weight (%): <b class="text-green-700_ mr-3">${total_percentage_weight}%</b>Rating: <b class="text-green-700_ mr-3">${total_average_rating}</b>`;
         },
         submit() {
-            // console.log(this.form);
             this.form.post(this.current_url + "/submit", {
                 onSuccess: (page) => {
                     this.$toast.add({
@@ -357,7 +365,8 @@ export default {
 
     mounted() {
         router.reload({ only: ["form_status"] });
-        console.log(this.form_status);
+        // console.log(this.period.id);
+        // console.log(this.form_status.id);
     },
 };
 </script>

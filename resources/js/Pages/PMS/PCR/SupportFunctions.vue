@@ -10,6 +10,7 @@ td {
 </style>
 
 <script setup>
+import FormBreadcrumb from "@/Components/PMS/PCR/FormBreadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import MeasureSelector from "@/Components/PMS/PCR/MeasureSelector.vue";
 import { Head } from "@inertiajs/vue3";
@@ -20,11 +21,15 @@ import { Head } from "@inertiajs/vue3";
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 PCR / Form Status
-            </h2>
+            </h2> -->
+            <FormBreadcrumb
+                :period-id="this.period.id"
+                :form-status-id="formStatusId"
+            />
         </template>
-        <div class="py-2">
+        <div class="p-3">
             <Card class="w-full">
                 <template #title>
                     <!-- <Button
@@ -378,6 +383,7 @@ export default {
     },
     created() {
         this.$inertia.reload({ only: ["rows"] });
+        this.formStatusId = this.$inertia.page.url.split("/")[5];
     },
     mounted() {},
 };

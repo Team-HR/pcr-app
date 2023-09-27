@@ -73,9 +73,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post("/pms/pcr/{period_id}/strategic_function/{status_id}", [StrategicFunctionController::class, "create_update"]);
     Route::delete("/pms/pcr/{period_id}/strategic_function/{status_id}/delete/{strat_id}", [StrategicFunctionController::class, "delete"]);
     # pcr - support functions
-    Route::get("/pms/pcr/{period_id}/support_functions", [SupportFunctionController::class, "show"]);
-    Route::post("/pms/pcr/{period_id}/support_functions/accomplishment", [SupportFunctionController::class, "create_accomplishment"]);
-    Route::delete("/pms/pcr/{period_id}/support_functions/accomplishment/{support_function_data_id}", [SupportFunctionController::class, "delete_accomplishment"]);
+    Route::get("/pms/pcr/{period_id}/support_functions/{form_status_id}", [SupportFunctionController::class, "show"]);
+    Route::post("/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment", [SupportFunctionController::class, "create_accomplishment"]);
+    Route::delete("/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment/{support_function_data_id}", [SupportFunctionController::class, "delete_accomplishment"]);
 
     # rpc - review performance commitment reports
     Route::get("/pms/rpc", [ReviewPerformanceCommitmentController::class, "index"]);

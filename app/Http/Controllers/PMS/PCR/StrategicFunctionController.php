@@ -15,7 +15,7 @@ class StrategicFunctionController extends Controller
     {
         $period = PmsPeriod::find($period_id);
         $rows = PmsPcrStrategicFunctionData::where("pms_period_id", $period_id)->where("sys_employee_id", auth()->user()->sys_employee_id)->get();
-        return Inertia::render("Pms/Pcr/StrategicFunction", ["period" => $period, "rows" => $rows]);
+        return Inertia::render("PMS/PCR/StrategicFunction", ["period" => $period, "rows" => $rows]);
     }
 
     public function create_update($period_id, $status_id, Request $request)
