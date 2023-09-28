@@ -188,7 +188,7 @@ const showingNavigationDropdown = ref(false);
             <header
                 class="bg-white shadow absolute left-0 w-full z-5"
                 v-if="$slots.header"
-                style="top: 70px"
+                style="top: 65px"
             >
                 <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
                     <slot name="header" />
@@ -198,7 +198,7 @@ const showingNavigationDropdown = ref(false);
             <main
                 class="bg-green-700 p-5 w-full top-0 left-0 absolute overflow-auto surface-overlay w-full h-full z-0"
             >
-                <div style="height: 150px;"></div>
+                <div style="height: 100px;"></div>
                 <slot />
             </main>
         </div>
