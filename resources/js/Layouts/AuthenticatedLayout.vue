@@ -27,8 +27,9 @@ const showingNavigationDropdown = ref(false);
                                     class="flex items-center"
                                 >
                                     <ApplicationLogo
-                                        class="block h-12 w-auto fill-current text-gray-800 mr-2"
-                                    /><span>Online SPMS</span>
+                                        class="block h-12 w-auto fill-current text-gray-800 mr-0"
+                                    />
+                                    <!-- <span>Online SPMS</span> -->
                                 </Link>
                             </div>
 
@@ -186,7 +187,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Heading -->
             <header
-                class="bg-white shadow absolute left-0 w-full z-5"
+                class="bg-white shadow absolute left-0 w-full z-4"
                 v-if="$slots.header"
                 style="top: 65px"
             >
@@ -198,7 +199,7 @@ const showingNavigationDropdown = ref(false);
             <main
                 class="bg-green-700 p-5 w-full top-0 left-0 absolute overflow-auto surface-overlay w-full h-full z-0"
             >
-                <div style="height: 100px;"></div>
+                <div style="height: 100px"></div>
                 <slot />
             </main>
         </div>
@@ -214,7 +215,7 @@ export default {
                     route: "dashboard",
                 },
                 {
-                    label: "Performance Review",
+                    label: "Performance Commitment",
                     route: "pcr",
                 },
                 {
@@ -224,6 +225,14 @@ export default {
                 {
                     label: "Rating Scale Matrix",
                     route: "rsm",
+                },
+                {
+                    label: "Review Performance Commitment",
+                    route: "rpc",
+                },
+                {
+                    label: "Performance Management Team",
+                    route: "pmt",
                 },
             ],
         };
