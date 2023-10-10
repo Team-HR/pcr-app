@@ -13,7 +13,7 @@ td {
 import FormTypeEditor from "@/Components/PMS/PCR/FormTypeEditor.vue";
 // import SignatoriesEditor from '@/Components/PMS/PCR/SignatoriesEditor.vue';
 // import StrategicFunctionEditor from '@/Components/PMS/PCR/StrategicFunctionEditor.vue';
-import CoreFunctionsEditor from '@/Components/PMS/PCR/CoreFunctionsEditor.vue';
+import CoreFunctionsEditor from "@/Components/PMS/PCR/CoreFunctionsEditor.vue";
 </script>
 
 <template>
@@ -148,19 +148,21 @@ export default {
         },
     },
 
-    // created() {
-    //   axios.post("/api/pms/pcr_data", {
-    //     pms_pcr_status: this.pms_pcr_status,
-    //   }).then(({ data }) => {
-    //     // console.log(data);
-    //     // this.core_functions = data
-    //     // this.rows = data.rows
-    //     // this.rows_strat = data.rows_strat
-    //     // this.support_functions = data.rows_support
-    //     // this.rows_support = data.rows_support.data
-    //   })
-    //   // console.log(this.pms_pcr_status);
-    // },
+    created() {
+        axios
+            .post("/pms/pcr_data", {
+                pms_pcr_status: this.pms_pcr_status,
+            })
+            .then(({ data }) => {
+                // console.log(data);
+                this.core_functions = data;
+                this.rows = data.rows;
+                this.rows_strat = data.rows_strat;
+                this.support_functions = data.rows_support;
+                this.rows_support = data.rows_support.data;
+            });
+        // console.log(this.pms_pcr_status);
+    },
 
     // mounted() {
 

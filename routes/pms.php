@@ -12,6 +12,9 @@ use App\Http\Controllers\PMS\PCR\StrategicFunctionController;
 use App\Http\Controllers\PMS\PCR\SupportFunctionController;
 use App\Http\Controllers\PMS\RPC\ReviewPerformanceCommitmentController;
 use App\Http\Controllers\PMS\SettingsController;
+use Illuminate\Http\Request;
+use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
+
 
 Route::middleware(['auth'])->group(function () {
     # pms dashboard
@@ -75,13 +78,46 @@ Route::middleware(['auth'])->group(function () {
     # pcr - support functions
     Route::get("/pms/pcr/{period_id}/support_functions/{form_status_id}", [SupportFunctionController::class, "show"]);
     Route::post("/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment", [SupportFunctionController::class, "create_accomplishment"]);
-    Route::delete("/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment/{support_function_data_id}", [SupportFunctionController::class, "delete_accomplishment"]);
+    Route::delete(
+        "/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment/{support_function_data_id}",
+        [SupportFunctionController::class, "delete_accomplishment"]
+    );
+
+
+
+    Route::post('/pms/pcr_data', function (Request $request) {
+        $pms_pcr_status_id = $request->pms_pcr_status['id'];
+        $pms_period_id = $request->pms_pcr_status['pms_period_id'];
+        $sys_employee_id = $request->pms_pcr_status['sys_employee_id'];
+
+        $core_functions = (new CoreFunctionController)->get_row_data($pms_period_id, $pms_pcr_status_id, $sys_employee_id);
+
+        $data = $core_functions;
+
+        # get strategic function data
+        $rows = PmsPcrStrategicFunctionData::where("pms_period_id", $pms_period_id)->where("sys_employee_id", $sys_employee_id)->get();
+        $data["rows_strat"] = $rows;
+
+        # get support function data
+        $rows = (new SupportFunctionController)->get_support_function_rows($sys_employee_id, $pms_period_id);
+        $data["rows_support"] = $rows;
+
+        return $data;
+    });
+
+
 
     # rpc - review performance commitment reports
-    Route::get("/pms/rpc", [ReviewPerformanceCommitmentController::class, "index"]);
+    Route::get("/pms/rpc", [ReviewPerformanceCommitmentController::class, "index"])->name('rpc');
     Route::get("/pms/rpc/{period_id}", [ReviewPerformanceCommitmentController::class, "show"]);
     Route::get("/pms/rpc/{pms_pcr_status_id}/form", [ReviewPerformanceCommitmentController::class, "showPcr"]);
     Route::post("/pms/rpc/{period_id}/form/accomplishment", [CoreFunctionController::class, "create_update"]);
+
+    # pmt - performance management team
+    Route::get("/pms/pmt", function () {
+        // return Inertia::render('Pms/Index');
+        return false;
+    })->name('pmt');
 
     # pms - settings
     Route::get("/pms/settings", [SettingsController::class, "index"]);
