@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class SysEmployee extends Model
 {
     use HasFactory;
 
 
-    protected $appends = ['full_name', 'full_name_fmle'];
+    protected $appends = ['full_name', 'full_name_fmle', 'username'];
 
     /**
      * Get the employees's full name.
@@ -18,6 +19,21 @@ class SysEmployee extends Model
      * @return string
      */
 
+
+
+    public function getUsernameAttribute()
+    {
+        $username = null;
+
+
+        $user = User::where('sys_employee_id', $this->id)->first();
+
+        if ($user) {
+            $username = $user;
+        }
+
+        return $username;
+    }
 
     public function getFullNameFmleAttribute()
     {

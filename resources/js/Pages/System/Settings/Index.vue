@@ -2,6 +2,22 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
 import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
+import { ref } from "vue";
+
+let items = ref([
+    {
+        title: "Employees",
+        subtitle: "Add or update personnel to agency",
+        href: "/system/settings/employees",
+        img: "https://img.freepik.com/free-vector/employee-group-portrait-illustration_74855-5495.jpg?w=1380&t=st=1696923010~exp=1696923610~hmac=a041755b029c69f8900c4373980878f2838f647df1daedba15ad5fe37e2b46fa",
+    },
+    // {
+    //     title: "Register Users",
+    //     subtitle: "Register new users",
+    //     href: "/system/settings/register",
+    //     img: "https://img.freepik.com/free-vector/mobile-login-concept-illustration_114360-83.jpg?w=740&t=st=1696920917~exp=1696921517~hmac=f3316473d589e92ee7b48945d00a7980c465f6df696f2ed5d6d288cbef6710c6",
+    // },
+]);
 </script>
 
 <template>
@@ -10,7 +26,7 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                PMS / Settings
+                System / Settings
             </h2>
         </template>
 
@@ -21,7 +37,7 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
                         ><i class="bi bi-gear"></i> Settings</template
                     >
                     <template #subtitle
-                        >Configure Performance Management System</template
+                        >Configure system-wide parameters</template
                     >
                     <template #content>
                         <div class="flex flex-wrap">
@@ -39,16 +55,16 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
                                         >
                                             <img
                                                 alt="user header"
-                                                :src="item.src"
+                                                :src="item.img"
                                                 style="height: 15em"
                                             />
                                         </div>
                                     </template>
                                     <template #title>
-                                        {{ item.label }}
+                                        {{ item.title }}
                                     </template>
                                     <template #subtitle>
-                                        Setup {{ item.label }}
+                                        {{ item.subtitle }}
                                     </template>
                                     <template #content>
                                         <Button
@@ -56,7 +72,7 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
                                             label="Configure"
                                             text
                                             raised
-                                            @click="$inertia.get(item.path)"
+                                            @click="$inertia.get(item.href)"
                                         />
                                     </template>
                                     <template #footer> </template>
@@ -69,24 +85,3 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
         </div>
     </AuthenticatedLayout>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            items: [
-                {
-                    label: "Periods",
-                    path: "/pms/settings/periods",
-                    src: "https://img.freepik.com/premium-photo/automated-testing-abstract-concept-vector-illustration_916191-65839.jpg?w=1060",
-                },
-                {
-                    label: "Support Functions",
-                    path: "/pms/settings/support_functions",
-                    src: "https://img.freepik.com/premium-photo/digital-marketing-abstract-concept_891428-187.jpg?w=900",
-                },
-            ],
-        };
-    },
-    mounted() {},
-};
-</script>
