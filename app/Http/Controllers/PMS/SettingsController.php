@@ -39,7 +39,7 @@ class SettingsController extends Controller
 
         rsort($_years);
 
-        return Inertia::render('Pms/Settings/Periods', ['years' => $_years]);
+        return Inertia::render('PMS/Settings/Periods', ['years' => $_years]);
     }
 
 
