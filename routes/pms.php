@@ -11,7 +11,7 @@ use App\Http\Controllers\PMS\PCR\PcrController;
 use App\Http\Controllers\PMS\PCR\StrategicFunctionController;
 use App\Http\Controllers\PMS\PCR\SupportFunctionController;
 use App\Http\Controllers\PMS\RPC\ReviewPerformanceCommitmentController;
-use App\Http\Controllers\PMS\SettingsController;
+use App\Http\Controllers\PMS\SettingController;
 use Illuminate\Http\Request;
 use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
 
@@ -120,14 +120,14 @@ Route::middleware(['auth'])->group(function () {
     })->name('pmt');
 
     # pms - settings
-    Route::get("/pms/settings", [SettingsController::class, "index"]);
-    Route::get("/pms/settings/periods", [SettingsController::class, "periods"]);
-    Route::post("/pms/settings/periods/create", [SettingsController::class, "create_period"]);
-    Route::get("/pms/settings/support_functions", [SettingsController::class, "support_functions"]);
-    Route::get("/pms/settings/support_functions/{id}", [SettingsController::class, "support_functions_setup"]);
-    Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "get_support_functions"]);
-    Route::delete("/pms/settings/support_function/{id}", [SettingsController::class, "delete_support_function"]);
-    Route::post("/pms/settings/support_functions/{id}/getSimilarRatingScaleMeasures", [SettingsController::class, "get_similar_rating_scale_measures"]);
-    Route::post("/pms/settings/support_functions/{id}/move", [SettingsController::class, "move"]);
-    Route::post("/pms/settings/support_functions/{id}/create", [SettingsController::class, "support_functions_setup_create_update"]);
+    Route::get("/pms/settings", [SettingController::class, "index"]);
+    Route::get("/pms/settings/periods", [SettingController::class, "periods"]);
+    Route::post("/pms/settings/periods/create", [SettingController::class, "create_period"]);
+    Route::get("/pms/settings/support_functions", [SettingController::class, "support_functions"]);
+    Route::get("/pms/settings/support_functions/{id}", [SettingController::class, "support_functions_setup"]);
+    Route::post("/pms/settings/support_functions/{id}", [SettingController::class, "get_support_functions"]);
+    Route::delete("/pms/settings/support_function/{id}", [SettingController::class, "delete_support_function"]);
+    Route::post("/pms/settings/support_functions/{id}/getSimilarRatingScaleMeasures", [SettingController::class, "get_similar_rating_scale_measures"]);
+    Route::post("/pms/settings/support_functions/{id}/move", [SettingController::class, "move"]);
+    Route::post("/pms/settings/support_functions/{id}/create", [SettingController::class, "support_functions_setup_create_update"]);
 });

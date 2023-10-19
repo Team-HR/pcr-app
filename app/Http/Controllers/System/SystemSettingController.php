@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\SysEmployee;
 use App\Models\User;
 
-class SystemSettingsController extends Controller
+class SystemSettingController extends Controller
 {
     public function index()
     {
