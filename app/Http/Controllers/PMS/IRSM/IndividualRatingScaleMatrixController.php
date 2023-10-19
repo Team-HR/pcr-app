@@ -32,6 +32,7 @@ class IndividualRatingScaleMatrixController extends Controller
         $core_function = new CoreFunctionController();
         $rows = $core_function->get_rows($period_id, $sys_employee_id);
 
+        // return $rows;
         return Inertia::render("PMS/IRSM/IndividualRatingScaleMatrix", [
             "period" => $period, "rows" => $rows
         ]);

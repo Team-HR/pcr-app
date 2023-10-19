@@ -48,6 +48,7 @@ class CoreFunctionController extends Controller
                 }
             }
         }
+        // return $mfo_ids;
         # get mfo data and parents as well
         $mfos = [];
 
@@ -57,6 +58,7 @@ class CoreFunctionController extends Controller
             $mfos[] = $mfo;
             $mfos = get_parent($mfos, $mfo->parent_id);
         }
+
         # get oredered rows
         # sort parents first start -- according to the alphanumeric code
         $rows = GET_SORTED_RSM_ROWS($mfos);
@@ -480,6 +482,8 @@ function get_strat_data($period_id, $sys_employee_id)
 
 function GET_SORTED_RSM_ROWS($mfos)
 {
+
+    // return $mfos;    
     if (empty($mfos)) return [];
 
     # sort parents first start -- according to the alphanumeric code
@@ -511,74 +515,86 @@ function GET_SORTED_RSM_ROWS($mfos)
             }
         }
     }
+
     # sort end
     //    return $sorted_pms_rating_scale_matrices;
-
     $matrices = [];
-    foreach ($pms_rating_scale_matrices as $key => $mfo) {
+    foreach ($sorted_pms_rating_scale_matrices as $key => $mfo) {
         $matrices[] = $mfo;
         # check if mfo has children
         $matrices = get_mfo_children($matrices, $mfo["id"]);
     }
 
+    // return $matrices;
+    $rows = [];
     foreach ($matrices as $row) {
-        $level = get_level(0, $row["parent_id"]);
-        $rowspan = 0;
-        $si_only = false;
-        $success_indicators = get_success_indicators($row["id"]);
-        $success_indicators_count = count($success_indicators);
-        $rowspan = $success_indicators_count > 1 ? $success_indicators_count : 0;
-        $datum = [
-            "id" => $row["id"],
-            "parent_id" => $row["parent_id"],
-            "level" => $level,
-            "rowspan" => $rowspan,
-            "mfo_only" => true,
-            "si_only" => $si_only,
-            "code" => $row["code"],
-            "title" => $row["title"],
-        ];
+        $is_mfo = false;
 
-        # if no success indicators
-        if ($success_indicators_count < 1) {
-            $rows[] = $datum;
-        } else {
-            # if there is/are success indicators
-            $datum["mfo_only"] = false;
-            foreach ($success_indicators as $key => $success_indicator) {
-                if ($key > 0) {
-                    $datum["si_only"] = true;
+        foreach ($mfos as $mfo) {
+            if ($mfo['id'] == $row['id']) {
+                $is_mfo = true;
+                break;
+            }
+        }
+
+        if ($is_mfo) {
+            $level = get_level(0, $row["parent_id"]);
+            $rowspan = 0;
+            $si_only = false;
+            $success_indicators = get_success_indicators($row["id"]);
+            $success_indicators_count = count($success_indicators);
+            $rowspan = $success_indicators_count > 1 ? $success_indicators_count : 0;
+            $datum = [
+                "id" => $row["id"],
+                "parent_id" => $row["parent_id"],
+                "level" => $level,
+                "rowspan" => $rowspan,
+                "mfo_only" => true,
+                "si_only" => $si_only,
+                "code" => $row["code"],
+                "title" => $row["title"],
+            ];
+
+            # if no success indicators
+            if ($success_indicators_count < 1) {
+                $rows[] = $datum;
+            } else {
+                # if there is/are success indicators
+                $datum["mfo_only"] = false;
+                foreach ($success_indicators as $key => $success_indicator) {
+                    if ($key > 0) {
+                        $datum["si_only"] = true;
+                    }
+
+                    $quality = $success_indicator["quality"];
+                    $efficiency = $success_indicator["efficiency"];
+                    $timeliness = $success_indicator["timeliness"];
+
+                    $performance_measures = [];
+
+                    if ($quality) {
+                        $performance_measures[] = "Quality";
+                    }
+                    if ($efficiency) {
+                        $performance_measures[] = "Efficiency";
+                    }
+                    if ($timeliness) {
+                        $performance_measures[] = "Timeliness";
+                    }
+
+                    $in_charges = PmsRsmAssignment::where("pms_rsm_success_indicator_id", $success_indicator["id"])->get();
+
+                    $success_indicator_datum = [
+                        "pms_rsm_success_indicator_id" => $success_indicator["id"],
+                        "success_indicator" => $success_indicator["success_indicator"],
+                        "performance_measures" => $performance_measures,
+                        "quality" => $quality,
+                        "efficiency" => $efficiency,
+                        "timeliness" => $timeliness,
+                        "in_charges" => get_incharges($in_charges)
+                    ];
+                    $rows[] = array_merge($datum, $success_indicator_datum);
                 }
-
-                $quality = $success_indicator["quality"];
-                $efficiency = $success_indicator["efficiency"];
-                $timeliness = $success_indicator["timeliness"];
-
-                $performance_measures = [];
-
-                if ($quality) {
-                    $performance_measures[] = "Quality";
-                }
-                if ($efficiency) {
-                    $performance_measures[] = "Efficiency";
-                }
-                if ($timeliness) {
-                    $performance_measures[] = "Timeliness";
-                }
-
-
-                $in_charges = PmsRsmAssignment::where("pms_rsm_success_indicator_id", $success_indicator["id"])->get();
-
-                $success_indicator_datum = [
-                    "pms_rsm_success_indicator_id" => $success_indicator["id"],
-                    "success_indicator" => $success_indicator["success_indicator"],
-                    "performance_measures" => $performance_measures,
-                    "quality" => $quality,
-                    "efficiency" => $efficiency,
-                    "timeliness" => $timeliness,
-                    "in_charges" => get_incharges($in_charges)
-                ];
-                $rows[] = array_merge($datum, $success_indicator_datum);
             }
         }
     }
