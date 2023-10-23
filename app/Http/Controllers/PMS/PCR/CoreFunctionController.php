@@ -381,7 +381,7 @@ function get_pms_pcr_core_function_data($pms_rsm_success_indicator_id)
         $average = $total / $count;
         $percent = $pms_pcr_core_function_data["percent"] / 100;
         $average = $average * $percent;
-        $average = number_format($average, 2);
+        $average = bcdiv($average, 1, 2);
         $pms_pcr_core_function_data["average"] = $average;
     }
     return $pms_pcr_core_function_data;
@@ -457,7 +457,7 @@ function get_total_average_rating($rows)
         }
     }
 
-    return number_format($total_average_rating, 2);
+    return bcdiv($total_average_rating, 1, 2);
 }
 
 function get_strat_data($period_id, $sys_employee_id)
@@ -467,7 +467,7 @@ function get_strat_data($period_id, $sys_employee_id)
     if (isset($strat->percent) && isset($strat->final_numerical_rating)) {
         $data = [
             "total_percentage_weight" => $strat->percent,
-            "total_average_rating" => number_format($strat->final_numerical_rating * ($strat->percent / 100), 2)
+            "total_average_rating" => bcdiv($strat->final_numerical_rating * ($strat->percent / 100), 1, 2)
         ];
     } else {
         $data = [

@@ -122,7 +122,7 @@ class SupportFunctionController extends Controller
                     }
                     if ($count > 0) {
                         $average = ($total_scores / $count) * $percent_data / 100;
-                        $average = floatval(number_format($average, 3));
+                        $average = bcdiv($average, 1, 2);
                         $total_numerical_rating += $average;
                     }
                 }
@@ -223,7 +223,7 @@ function get_numerical_rating($sys_employee_id, $pms_period_id)
                 }
                 if ($count > 0) {
                     $average = ($total_scores / $count) * $percent_data / 100;
-                    $average = floatval(number_format($average, 3));
+                    $average = bcdiv($average, 1, 2);
                     $total_numerical_rating += $average;
                 }
             }
