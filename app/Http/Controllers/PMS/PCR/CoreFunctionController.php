@@ -483,12 +483,11 @@ function get_strat_data($period_id, $sys_employee_id)
 function GET_SORTED_RSM_ROWS($mfos)
 {
 
-    // return $mfos;    
     if (empty($mfos)) return [];
 
     # sort parents first start -- according to the alphanumeric code
     $sorted_codes = [];
-
+    $pms_rating_scale_matrices = [];
 
     foreach ($mfos as $key => $mfo) {
         if (!$mfo["parent_id"]) {
