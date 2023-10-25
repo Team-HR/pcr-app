@@ -21,8 +21,8 @@ class CoreFunctionController extends Controller
     public function show($period_id, $id)
     {
         $sys_employee_id = auth()->user()->sys_employee_id;
+
         $data = $this->get_row_data($period_id, $id, $sys_employee_id);
-        // return $data["rows"];
 
         return Inertia::render("PMS/PCR/CoreFunctions", ["period" => $data["period"], "form_status" => $data["form_status"], "rows" => $data["rows"], "total_percentage_weight" => $data["total_percentage_weight"], "total_average_rating" => $data["total_average_rating"]]);
     }
@@ -56,8 +56,10 @@ class CoreFunctionController extends Controller
         foreach ($mfo_ids as $key => $mfo_id) {
             $mfo = PmsRsm::find($mfo_id);
             $mfos[] = $mfo;
-            $mfos = get_parent($mfos, $mfo->parent_id);
+            get_parent($mfos, $mfo->parent_id);
         }
+
+        // return $mfos;
 
         # get oredered rows
         # sort parents first start -- according to the alphanumeric code
@@ -254,7 +256,7 @@ class CoreFunctionController extends Controller
             $mfo = PmsRsm::find($mfo_id);
             // if (!in_array($mfo->id, $mfo_ids)) {
             $mfos[] = $mfo;
-            $mfos = get_parent($mfos, $mfo->parent_id);
+            get_parent($mfos, $mfo->parent_id);
             // }
         }
 
@@ -388,25 +390,27 @@ function get_pms_pcr_core_function_data($pms_rsm_success_indicator_id)
 }
 
 
-function get_parent($mfos, $parent_id)
+function get_parent(&$mfos, $parent_id)
 {
     $mfo = PmsRsm::find($parent_id);
+    if (!$mfo) return null;
 
-    // check if parent already exists
-    if (!$mfo) return $mfos;
-
+    // check if parent already exists start
+    $exists = false;
     foreach ($mfos as $value) {
-        if ($value["id"] === $mfo->id) {
-            return $mfos;
+        if ($value["id"] == $mfo->id) {
+            $exists = true;
         }
     }
+    // check if parent already exists end
 
-    $mfos[] = $mfo;
-    if ($mfo->parent_id) {
-        $mfos = get_parent($mfos, $mfo->parent_id);
+    if (!$exists) {
+        $mfos[] = $mfo;
+        get_parent($mfos, $mfo->parent_id);
+        $exists = false;
     }
 
-    return $mfos;
+    // return $mfos;
 }
 
 # get level iterator
@@ -482,6 +486,8 @@ function get_strat_data($period_id, $sys_employee_id)
 
 function GET_SORTED_RSM_ROWS($mfos)
 {
+
+    // return $mfos;
 
     if (empty($mfos)) return [];
 
