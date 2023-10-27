@@ -5,8 +5,18 @@ import { Head, router } from "@inertiajs/vue3";
 import axios from "axios";
 import { watch } from "vue";
 import { ref, reactive, onMounted } from "vue";
+import { FilterMatchMode } from "primevue/api";
 
 defineProps({ employees: Array });
+
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    // name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    // 'country.name': { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    // representative: { value: null, matchMode: FilterMatchMode.IN },
+    // status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    // verified: { value: null, matchMode: FilterMatchMode.EQUALS }
+});
 
 var addEditModal = reactive({
     is_visible: false,
@@ -21,6 +31,8 @@ var addEditModal = reactive({
         gender: null,
     },
 });
+
+
 
 var genders = ref([
     {
@@ -46,6 +58,10 @@ function addEditEmployee() {
     //     console.log("employees: ", data);
     //     employees = data;
     // });
+}
+
+function createUsername(employee) {
+    console.log(employee);
 }
 
 watch(
@@ -209,7 +225,34 @@ watch(
 
                         <div class="flex flex-wrap">
                             <!-- <Register /> -->
-                            <DataTable :value="employees" class="w-full">
+                            <DataTable
+                                v-model:filters="filters"
+                                :value="employees"
+                                class="w-full"
+                                paginator
+                                :rows="5"
+                                :rowsPerPageOptions="[5, 10, 20, 50]"
+                                :globalFilterFields="[
+                                    'full_name',
+                                    // 'country.name',
+                                    // 'representative.name',
+                                    // 'status',
+                                ]"
+                            >
+                                <template #header>
+                                    <div class="flex justify-content-end">
+                                        <span class="p-input-icon-left">
+                                            <i class="pi pi-search" />
+                                            <InputText
+                                                v-model="
+                                                    filters['global'].value
+                                                "
+                                                placeholder="Search Name"
+                                                clearable
+                                            />
+                                        </span>
+                                    </div>
+                                </template>
                                 <Column
                                     field="id"
                                     header="Employee ID"
@@ -217,7 +260,18 @@ watch(
                                 <Column
                                     field="username.username"
                                     header="Username"
-                                ></Column>
+                                >
+                                    <template #body="slotProps">
+                                        <div v-if="slotProps.data.username">
+                                            {{
+                                                slotProps.data.username.username
+                                            }}
+                                        </div>
+                                        <div v-else>
+                                            ----
+                                        </div>
+                                    </template>
+                                </Column>
                                 <Column
                                     field="full_name"
                                     header="Name"

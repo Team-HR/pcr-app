@@ -13,7 +13,7 @@ class SysEmployeeController extends Controller
 {
     public function index()
     {
-        $employees = SysEmployee::all();
+        $employees = SysEmployee::orderBy("last_name")->get();
         return Inertia::render('System/Settings/Employees', ["employees" => $employees]);
     }
 
