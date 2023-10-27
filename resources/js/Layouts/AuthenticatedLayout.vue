@@ -12,7 +12,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div class="overflow-hidden">
-        <div class="min-h-screen bg-gray-100 relative">
+        <div class="min-h-screen relative">
             <nav
                 class="bg-white border-b border-gray-100 absolute top-0 left-0 w-full z-5"
             >
@@ -197,7 +197,7 @@ const showingNavigationDropdown = ref(false);
             </header>
             <!-- Page Content -->
             <main
-                class="bg-green-700 p-5 w-full top-0 left-0 absolute overflow-auto surface-overlay w-full h-full z-0"
+                class="bg-gray-200 p-5 w-full top-0 left-0 absolute overflow-auto w-full h-full z-0"
             >
                 <div style="height: 100px"></div>
                 <slot />
@@ -222,6 +222,31 @@ export default {
                     label: "Individual Rating Scale",
                     route: "irsm",
                 },
+                // {
+                //     label: "Rating Scale Matrix",
+                //     route: "rsm",
+                // },
+                // {
+                //     label: "Review Performance Commitment",
+                //     route: "rpc",
+                // },
+                // {
+                //     label: "Performance Management Team",
+                //     route: "pmt",
+                // },
+            ],
+        };
+    },
+    methods: {
+        checkIfActive(route) {
+            const url = this.$inertia.page.url.split("/");
+            if (url.includes(route)) {
+                return true;
+            } else false;
+        },
+        getNavItems() {
+            const roles = this.$inertia.page.props.auth.user.roles;
+            const authLinks = [
                 {
                     label: "Rating Scale Matrix",
                     route: "rsm",
@@ -234,19 +259,17 @@ export default {
                     label: "Performance Management Team",
                     route: "pmt",
                 },
-            ],
-        };
-    },
-    methods: {
-        checkIfActive(route) {
-            const url = this.$inertia.page.url.split("/");
-            if (url.includes(route)) {
-                return true;
-            } else false;
+            ];
+            authLinks.forEach((element) => {
+                if (roles.includes(element.route)) {
+                    this.items.push(element);
+                }
+            });
         },
     },
     created() {
-        // console.log(this.$inertia.page.url.split("/"));
+        // console.log(this.$inertia.page.url.split("/")
+        this.getNavItems();
     },
 };
 </script>

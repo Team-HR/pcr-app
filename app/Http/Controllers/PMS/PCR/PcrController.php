@@ -155,7 +155,6 @@ class PcrController extends Controller
         $support_functions = $support_function->get_support_function_rows($form_status->sys_employee_id, $period_id);
         $support_functions = $support_functions;
         // return $support_function;
-
         return Inertia::render("PMS/PCR/Print", [
             "form_status" => $form_status,
             "strategic_function" =>  $strategic_function,
