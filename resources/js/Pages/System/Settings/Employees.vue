@@ -32,8 +32,6 @@ var addEditModal = reactive({
     },
 });
 
-
-
 var genders = ref([
     {
         name: "MALE",
@@ -46,14 +44,46 @@ var genders = ref([
 ]);
 
 function submit() {
-    console.log(addEditModal);
-    addEditModal.is_visible = false;
-    router.post("/system/settings/employees", addEditModal.form);
+    router.post("/system/settings/employees", addEditModal.form, {
+        onFinish: (visit) => {
+            // console.log(visit);
+            addEditModal.is_visible = false;
+        },
+    });
 }
 
-function addEditEmployee() {
-    addEditModal.is_visible = true;
-    addEditModal.state = "Add New Employee";
+function addEditEmployee(employee = null) {
+    console.log(employee);
+    if (!employee) {
+        addEditModal.is_visible = true;
+        addEditModal.state = "Add New Employee";
+    } else {
+        addEditModal.is_visible = true;
+        addEditModal.state = "Edit Employee";
+        var gender = null;
+        if (employee.gender) {
+            gender =
+                employee.gender == "MALE"
+                    ? {
+                          name: "MALE",
+                          code: "MALE",
+                      }
+                    : {
+                          name: "FEMALE",
+                          code: "FEMALE",
+                      };
+        }
+        addEditModal.form.id = employee.id;
+        addEditModal.form.username = employee.account
+            ? employee.account.username
+            : null;
+        addEditModal.form.last_name = employee.last_name;
+        addEditModal.form.first_name = employee.first_name;
+        addEditModal.form.middle_name = employee.middle_name;
+        addEditModal.form.ext_name = employee.ext_name;
+        addEditModal.form.gender = gender;
+    }
+
     // axios.get("/api/list/employees").then(({ data }) => {
     //     console.log("employees: ", data);
     //     employees = data;
@@ -258,18 +288,16 @@ watch(
                                     header="Employee ID"
                                 ></Column>
                                 <Column
-                                    field="username.username"
+                                    field="account.username"
                                     header="Username"
                                 >
                                     <template #body="slotProps">
-                                        <div v-if="slotProps.data.username">
+                                        <div v-if="slotProps.data.account">
                                             {{
-                                                slotProps.data.username.username
+                                                slotProps.data.account.username
                                             }}
                                         </div>
-                                        <div v-else>
-                                            ----
-                                        </div>
+                                        <div v-else>----</div>
                                     </template>
                                 </Column>
                                 <Column
@@ -278,7 +306,16 @@ watch(
                                     body-class="uppercase"
                                 ></Column>
                                 <Column field="gender" header="Gender"></Column>
-                                <Column header="Options"> </Column>
+                                <Column header="Options">
+                                    <template #body="slotProps">
+                                        <Button
+                                            label="Edit"
+                                            @click="
+                                                addEditEmployee(slotProps.data)
+                                            "
+                                        ></Button>
+                                    </template>
+                                </Column>
                             </DataTable>
                         </div>
                     </template>
