@@ -4,7 +4,9 @@ namespace App\Http\Controllers\PMS\RPC;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PMS\PCR\CoreFunctionController;
+use App\Http\Controllers\PMS\PCR\SupportFunctionController;
 use App\Models\PMS\PCR\PmsPcrStatus;
+use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
 use App\Models\PMS\PmsPeriod;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -39,7 +41,29 @@ class ReviewPerformanceCommitmentController extends Controller
         $pms_period_id = $pms_pcr_status["pms_period_id"];
         $period = PmsPeriod::find($pms_period_id);
 
+        $strategic_function = PmsPcrStrategicFunctionData::where('pms_period_id', $pms_period_id)->where('sys_employee_id', $pms_pcr_status->sys_employee_id)->first();
+        $core_functions = new CoreFunctionController;
+        $core_functions = $core_functions->get_row_data($pms_period_id, $pms_pcr_status_id, $pms_pcr_status->sys_employee_id);
+        $core_functions = $core_functions;
+        $support_function = new SupportFunctionController();
+        $support_functions = $support_function->get_support_function_rows($pms_pcr_status->sys_employee_id, $pms_period_id);
+        $support_functions = $support_functions;
+        // return $support_function;
 
-        return Inertia("PMS/RPC/ReviewPerformanceCommitmentAndReviewForm", ["period" => $period, "pms_pcr_status" => $pms_pcr_status]);
+        $data =  [
+            "period" => $period,
+            "form_status" => $pms_pcr_status,
+            "strategic_function" =>  $strategic_function,
+            "core_functions" => $core_functions,
+            "support_functions" => $support_functions
+        ];
+
+        return Inertia("PMS/RPC/ReviewPerformanceCommitmentAndReviewForm", $data);
+        // return Inertia::render("PMS/RPC/Print", [
+        //     "form_status" => $pms_pcr_status,
+        //     "strategic_function" =>  $strategic_function,
+        //     "core_functions" => $core_functions,
+        //     "support_functions" => $support_functions
+        // ]);
     }
 }

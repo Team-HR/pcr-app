@@ -12,7 +12,7 @@ td {
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head } from "@inertiajs/vue3";
-import PcrForm from "@/Components/PMS/PCR/FormComponent.vue";
+import PcrForm from "@/Components/PMS/PCR/PcrForm.vue";
 </script>
 
 <template>
@@ -21,7 +21,7 @@ import PcrForm from "@/Components/PMS/PCR/FormComponent.vue";
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Review Performance Commitment / Select PCR
+                Review Performance Commitment / PCR
             </h2>
         </template>
 
@@ -46,7 +46,12 @@ import PcrForm from "@/Components/PMS/PCR/FormComponent.vue";
                     <!-- This here shows the individual's pcr form. -->
                 </template>
                 <template #content>
-                    <PcrForm :pms_pcr_status="pms_pcr_status" />
+                    <PcrForm
+                        form_status=""
+                        strategic_function=""
+                        core_functions=""
+                        support_functions=""
+                    />
                 </template>
             </Card>
         </div>
@@ -56,8 +61,10 @@ import PcrForm from "@/Components/PMS/PCR/FormComponent.vue";
 export default {
     props: {
         period: null,
-        pms_pcr_status: null,
+        form_status: null,
+        strategic_function: null,
         core_functions: null,
+        support_functions: null,
     },
     data() {
         return {
