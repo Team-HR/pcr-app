@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\PMS\RSM;
 
 use App\Http\Controllers\Controller;
@@ -55,13 +56,15 @@ class RatingScaleMatrixController extends Controller
         # sort end
 
         // return $sorted_pms_rating_scale_matrices;
-
+        // return $pms_rating_scale_matrices;
         $matrices = [];
         foreach ($pms_rating_scale_matrices as $key => $mfo) {
             $matrices[] = $mfo;
             # check if mfo has children
             $matrices = get_mfo_children($matrices, $mfo["id"]);
         }
+
+        // return $matrices;
 
         foreach ($matrices as $row) {
             $level = get_level(0, $row["parent_id"]);
@@ -107,7 +110,6 @@ class RatingScaleMatrixController extends Controller
                     if ($timeliness) {
                         $performance_measures[] = "Timeliness";
                     }
-
 
                     $in_charges = PmsRsmAssignment::where("pms_rsm_success_indicator_id", $success_indicator["id"])->get();
 
@@ -163,9 +165,8 @@ class RatingScaleMatrixController extends Controller
 
     public function destroy($period_id, $id)
     {
-        # delete success indicators with pms_rsm_id = $id
-        $success_indicators = PmsRsmSuccessIndicator::where("pms_rsm_id", $id);
-        $success_indicators->delete();
+        # defined for pms_rsm_success_indicators deletion and pms_rsm_assignments
+        $pms_rsm_success_indicators = [];
 
         # get mfo children
         $children = [];
@@ -173,12 +174,38 @@ class RatingScaleMatrixController extends Controller
 
         # delete mfo children
         foreach ($children as $child) {
-            PmsRsm::find($child["id"])->delete();
+            if ($pms_rsm_success_indicator = PmsRsmSuccessIndicator::where("pms_rsm_id", $child["id"])->get()->toArray()) {
+                $pms_rsm_success_indicators[] = $pms_rsm_success_indicator;
+            };
+            PmsRsm::find($child["id"])->delete(); // uncomment after testing
         }
 
-        # delete mfo parent
+        # delete parent mfo
         $mfo = PmsRsm::find($id);
-        $mfo->delete();
+        $mfo->delete(); // uncomment after testing
+
+        if ($pms_rsm_success_indicator = PmsRsmSuccessIndicator::where("pms_rsm_id", $child["id"])->get()->toArray()) {
+            $pms_rsm_success_indicators[] = $pms_rsm_success_indicator;
+        };
+
+        $merged_pms_rsm_success_indicators = [];
+
+        foreach ($pms_rsm_success_indicators as $key => $array) {
+            $merged_pms_rsm_success_indicators = array_merge($merged_pms_rsm_success_indicators, $array);
+        }
+
+        $si_to_be_deleted = [];
+
+        foreach ($merged_pms_rsm_success_indicators as $si) {
+            if (!in_array($si["id"], $si_to_be_deleted)) {
+                $si_to_be_deleted[] = $si["id"];
+            }
+        }
+
+        foreach ($si_to_be_deleted as $pms_rsm_success_indicator_id) {
+            $SI = new SuccessIndicatorController();
+            $SI->delete($pms_rsm_success_indicator_id);
+        }
 
         return Redirect::back();
     }

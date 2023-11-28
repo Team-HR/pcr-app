@@ -2,7 +2,7 @@
 
 namespace App\Models\PMS\PCR;
 
-use App\Models\PmsPeriod;
+use App\Models\PMS\PmsPeriod;
 use App\Models\SysDepartment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

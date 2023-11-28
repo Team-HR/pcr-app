@@ -59,3 +59,24 @@ Route::get('/pms/periods', function () {
 
     return $data;
 });
+
+
+
+use App\Http\Controllers\PMS\PCR\CoreFunctionController;
+
+Route::post('/pms/get_core_functions_editor_data', function (Request $request) {
+    $pms_pcr_status_id = $request->pms_pcr_status_id;
+    $pms_period_id = $request->pms_period_id;
+    $sys_employee_id = $request->sys_employee_id;
+    $core_functions = (new CoreFunctionController)->get_core_functions_rows($pms_period_id, $pms_pcr_status_id, $sys_employee_id);
+
+    $data = $core_functions;
+    # get strategic function data
+    // $rows = PmsPcrStrategicFunctionData::where("pms_period_id", $pms_period_id)->where("sys_employee_id", $sys_employee_id)->get();
+    // $data["rows_strat"] = $rows;
+
+    // # get support function data
+    // $rows = (new SupportFunctionController)->get_support_function_rows($sys_employee_id, $pms_period_id);
+    // $data["rows_support"] = $rows;
+    return $data;
+});

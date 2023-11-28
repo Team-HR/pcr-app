@@ -110,9 +110,17 @@ class SuccessIndicatorController extends Controller
 
     public function destroy($period_id, $rsm_id, $id)
     {
-        // return $id;
+        $this->delete($id);
+        return Redirect::back();
+    }
+
+
+    public function delete($id)
+    {
         $success_indicator = PmsRsmSuccessIndicator::find($id);
         $success_indicator->delete();
-        return Redirect::back();
+
+        $pms_rsm_assignments = PmsRsmAssignment::where('pms_rsm_success_indicator_id', $id);
+        $pms_rsm_assignments->delete();
     }
 }

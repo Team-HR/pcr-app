@@ -11,7 +11,10 @@ use App\Http\Controllers\PMS\PCR\PcrController;
 use App\Http\Controllers\PMS\PCR\StrategicFunctionController;
 use App\Http\Controllers\PMS\PCR\SupportFunctionController;
 use App\Http\Controllers\PMS\RPC\ReviewPerformanceCommitmentController;
-use App\Http\Controllers\PMS\SettingsController;
+use App\Http\Controllers\PMS\SettingController;
+use Illuminate\Http\Request;
+use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
+
 
 Route::middleware(['auth'])->group(function () {
     # pms dashboard
@@ -23,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     # rating scale matrix
-    Route::get('/pms/rsm', [RatingScaleMatrixController::class, "index"]) ->name('rsm');
+    Route::get('/pms/rsm', [RatingScaleMatrixController::class, "index"])->name('rsm');
 
     Route::get('/pms/rsm/{period_id}', [RatingScaleMatrixController::class, "show"])->name("rsm.show");
     Route::post('/pms/rsm/{period_id}', [RatingScaleMatrixController::class, "create"]);
@@ -42,7 +45,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/pms/irsm/{period_id}", [IndividualRatingScaleMatrixController::class, "show"]);
 
     # pcr
-    Route::get("/pms/pcr", [PcrController::class, "index"]);
+
+
+    Route::get("/pms/pcr", [PcrController::class, "index"])->name('pcr');
     Route::get("/pms/pcr/{period_id}", [PcrController::class, "show"]);
     Route::get("/pms/pcr/{period_id}/print/{form_status_id}", [PcrController::class, "print"]);
 
@@ -71,25 +76,58 @@ Route::middleware(['auth'])->group(function () {
     Route::post("/pms/pcr/{period_id}/strategic_function/{status_id}", [StrategicFunctionController::class, "create_update"]);
     Route::delete("/pms/pcr/{period_id}/strategic_function/{status_id}/delete/{strat_id}", [StrategicFunctionController::class, "delete"]);
     # pcr - support functions
-    Route::get("/pms/pcr/{period_id}/support_functions", [SupportFunctionController::class, "show"]);
-    Route::post("/pms/pcr/{period_id}/support_functions/accomplishment", [SupportFunctionController::class, "create_accomplishment"]);
-    Route::delete("/pms/pcr/{period_id}/support_functions/accomplishment/{support_function_data_id}", [SupportFunctionController::class, "delete_accomplishment"]);
+    Route::get("/pms/pcr/{period_id}/support_functions/{form_status_id}", [SupportFunctionController::class, "show"]);
+    Route::post("/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment", [SupportFunctionController::class, "create_accomplishment"]);
+    Route::delete(
+        "/pms/pcr/{period_id}/support_functions/{form_status_id}/accomplishment/{support_function_data_id}",
+        [SupportFunctionController::class, "delete_accomplishment"]
+    );
+
+
+
+    Route::post('/pms/pcr_data', function (Request $request) {
+        $pms_pcr_status_id = $request->pms_pcr_status['id'];
+        $pms_period_id = $request->pms_pcr_status['pms_period_id'];
+        $sys_employee_id = $request->pms_pcr_status['sys_employee_id'];
+
+        $core_functions = (new CoreFunctionController)->get_row_data($pms_period_id, $pms_pcr_status_id, $sys_employee_id);
+
+        $data = $core_functions;
+
+        # get strategic function data
+        $rows = PmsPcrStrategicFunctionData::where("pms_period_id", $pms_period_id)->where("sys_employee_id", $sys_employee_id)->get();
+        $data["rows_strat"] = $rows;
+
+        # get support function data
+        $rows = (new SupportFunctionController)->get_support_function_rows($sys_employee_id, $pms_period_id);
+        $data["rows_support"] = $rows;
+
+        return $data;
+    });
+
+
 
     # rpc - review performance commitment reports
-    Route::get("/pms/rpc", [ReviewPerformanceCommitmentController::class, "index"]);
+    Route::get("/pms/rpc", [ReviewPerformanceCommitmentController::class, "index"])->name('rpc');
     Route::get("/pms/rpc/{period_id}", [ReviewPerformanceCommitmentController::class, "show"]);
     Route::get("/pms/rpc/{pms_pcr_status_id}/form", [ReviewPerformanceCommitmentController::class, "showPcr"]);
     Route::post("/pms/rpc/{period_id}/form/accomplishment", [CoreFunctionController::class, "create_update"]);
 
+    # pmt - performance management team
+    Route::get("/pms/pmt", function () {
+        // return Inertia::render('Pms/Index');
+        return false;
+    })->name('pmt');
+
     # pms - settings
-    Route::get("/pms/settings", [SettingsController::class, "index"]);
-    Route::get("/pms/settings/periods", [SettingsController::class, "periods"]);
-    Route::post("/pms/settings/periods/create", [SettingsController::class, "create_period"]);
-    Route::get("/pms/settings/support_functions", [SettingsController::class, "support_functions"]);
-    // /pms/settings/support_functions
-    Route::get("/pms/settings/support_functions/{id}", [SettingsController::class, "support_functions_setup"]);
-    Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "get_support_functions"]);
-    // /pms/settings/support_functions/19
-    // Route::post("/pms/settings/support_functions/{id}", [SettingsController::class, "support_functions_setup_create"]);
-    Route::post("/pms/settings/support_functions/{id}/create", [SettingsController::class, "support_functions_setup_create_update"]);
+    Route::get("/pms/settings", [SettingController::class, "index"]);
+    Route::get("/pms/settings/periods", [SettingController::class, "periods"]);
+    Route::post("/pms/settings/periods/create", [SettingController::class, "create_period"]);
+    Route::get("/pms/settings/support_functions", [SettingController::class, "support_functions"]);
+    Route::get("/pms/settings/support_functions/{id}", [SettingController::class, "support_functions_setup"]);
+    Route::post("/pms/settings/support_functions/{id}", [SettingController::class, "get_support_functions"]);
+    Route::delete("/pms/settings/support_function/{id}", [SettingController::class, "delete_support_function"]);
+    Route::post("/pms/settings/support_functions/{id}/getSimilarRatingScaleMeasures", [SettingController::class, "get_similar_rating_scale_measures"]);
+    Route::post("/pms/settings/support_functions/{id}/move", [SettingController::class, "move"]);
+    Route::post("/pms/settings/support_functions/{id}/create", [SettingController::class, "support_functions_setup_create_update"]);
 });
