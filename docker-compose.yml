@@ -6,6 +6,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.2/app
+        restart: 'always'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -25,6 +26,7 @@ services:
             - mariadb
     mariadb:
         image: 'mariadb:10'
+        restart: 'always'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
