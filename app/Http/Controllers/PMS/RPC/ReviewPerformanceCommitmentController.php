@@ -28,9 +28,7 @@ class ReviewPerformanceCommitmentController extends Controller
         $period = PmsPeriod::find($period_id);
         $items = [];
         $auth_sys_employee_id = auth()->user()->sys_employee_id;
-
         $items = PmsPcrStatus::where('immediate_supervisor', $auth_sys_employee_id)->where('pms_period_id', $period_id)->get();
-
         return Inertia("PMS/RPC/ReviewPerformanceCommitmentAndReview", ["period" => $period, "items" => $items]);
     }
 

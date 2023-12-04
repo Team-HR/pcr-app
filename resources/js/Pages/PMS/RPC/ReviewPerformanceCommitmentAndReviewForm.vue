@@ -47,10 +47,10 @@ import PcrForm from "@/Components/PMS/PCR/PcrForm.vue";
                 </template>
                 <template #content>
                     <PcrForm
-                        form_status=""
-                        strategic_function=""
-                        core_functions=""
-                        support_functions=""
+                        :form_status="form_status"
+                        :strategic_function="strategic_function"
+                        :core_functions="core_functions"
+                        :support_functions="support_functions"
                     />
                 </template>
             </Card>
@@ -77,6 +77,8 @@ export default {
         },
     },
     created() {},
-    mounted() {},
+    mounted() {
+        // console.log(this.form_status);
+    },
 };
 </script>
