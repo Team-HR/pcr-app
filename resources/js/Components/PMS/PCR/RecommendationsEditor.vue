@@ -1,22 +1,25 @@
 <template>
     <div class="py-5 px-5 text-sm">
-        <p>{{ recommendations }}</p>
+        <p>{{ form.recommendations }}</p>
     </div>
 
-    <div class="flex justify-content-center flex-wrap mb-2" v-if="isUserSupervisor">
+    <div
+        class="flex justify-content-center flex-wrap mb-2"
+        v-if="isUserSupervisor"
+    >
         <Button
             label="Add Recommendations"
             icon=""
             @click="visible = true"
             size="small"
-            v-if="!recommendations"
+            v-if="!form.recommendations"
         />
         <Button
             label="Edit Recommendations"
             icon=""
             @click="visible = true"
             size="small"
-            v-else="!recommendations"
+            v-else="!form.recommendations"
         />
 
         <Dialog
@@ -31,7 +34,7 @@
                     <span class="p-float-label">
                         <Textarea
                             id="value"
-                            v-model="recommendations"
+                            v-model="form.recommendations"
                             :class="{ 'p-invalid': errorMessage }"
                             class="w-full"
                             rows="4"
@@ -52,6 +55,7 @@
 </template>
 <script>
 // import { Inertia } from '@inertiajs/inertia';
+import { router } from "@inertiajs/vue3";
 
 export default {
     props: {},
@@ -59,13 +63,21 @@ export default {
         return {
             isUserSupervisor: true,
             visible: null,
-            recommendations:
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            form: {
+                recommendations: "",
+            },
+            errorMessage: null,
         };
     },
 
     methods: {
         onSubmit() {
+            router.post(router.page.url + "/save_recommendations", this.form, {
+                onSuccess: (page) => {
+                    this.visible = false;
+                },
+            });
+
             this.$toast.add({
                 severity: "success",
                 summary: "Saved!",
@@ -73,9 +85,18 @@ export default {
                 life: 3000,
             });
         },
+        getRecommendations() {
+            // console.log("getRecommendations");
+            axios
+                .get(router.page.url + "/get_recommendations")
+                .then(({ data }) => {
+                    // console.log(data);
+                    this.form.recommendations = data;
+                });
+        },
     },
     created() {
-        //
+        this.getRecommendations();
     },
     mounted() {
         //

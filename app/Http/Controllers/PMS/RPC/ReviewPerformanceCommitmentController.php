@@ -23,6 +23,21 @@ class ReviewPerformanceCommitmentController extends Controller
         return Inertia("PMS/RPC/Index", ["periods" => $periods]);
     }
 
+    public function get_recommendations($pms_pcr_status_id){
+        $file = PmsPcrStatus::find($pms_pcr_status_id);
+        // $file->recommendations = $request->recommendations;
+        return $file->recommendations;
+    }
+
+    public function save_recommendations($pms_pcr_status_id, Request $request)
+    {
+        $file = PmsPcrStatus::find($pms_pcr_status_id);
+        $file->recommendations = $request->recommendations;
+        $file->save();
+        // return $pms_pcr_status_id;
+    }
+
+    
     public function show($period_id)
     {
         $period = PmsPeriod::find($period_id);
@@ -32,6 +47,7 @@ class ReviewPerformanceCommitmentController extends Controller
         return Inertia("PMS/RPC/ReviewPerformanceCommitmentAndReview", ["period" => $period, "items" => $items]);
     }
 
+    
 
     public function showPcr($pms_pcr_status_id)
     {
