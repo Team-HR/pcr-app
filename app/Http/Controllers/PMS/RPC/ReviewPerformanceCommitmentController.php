@@ -5,10 +5,13 @@ namespace App\Http\Controllers\PMS\RPC;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PMS\PCR\CoreFunctionController;
 use App\Http\Controllers\PMS\PCR\SupportFunctionController;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionData;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionDataHistory;
 use App\Models\PMS\PCR\PmsPcrStatus;
 use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
 use App\Models\PMS\PmsPeriod;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ReviewPerformanceCommitmentController extends Controller
@@ -23,10 +26,68 @@ class ReviewPerformanceCommitmentController extends Controller
         return Inertia("PMS/RPC/Index", ["periods" => $periods]);
     }
 
-    public function get_recommendations($pms_pcr_status_id){
+    public function get_recommendations($pms_pcr_status_id)
+    {
         $file = PmsPcrStatus::find($pms_pcr_status_id);
         // $file->recommendations = $request->recommendations;
         return $file->recommendations;
+    }
+
+    /*
+     function save_corrections 
+     saves previous core_function_data to core_function_data_history table 
+     and new corrections to core_function_data table
+    */
+
+    public function save_corrections($pms_pcr_status_id, Request $request)
+    {
+
+        $auth_id = Auth()->user()->id;
+        # check if changes were made
+        $changes = [
+            'actual' => false,
+            'quality' => false,
+            'efficiency' => false,
+            'timeliness' => false,
+            'percent' => false,
+            'remarks' => false,
+        ];
+
+        $changes_were_made = false;
+
+        foreach ($changes as $key => $value) {
+            if ($request->previous[$key] != $request->new[$key]) {
+                $changes[$key] = true;
+                if ($changes_were_made != true) {
+                    $changes_were_made = true;
+                }
+            }
+        }
+
+        # if none return false
+        // if (!$changes_were_made) return json_encode(false);
+        # if exists store changes
+        # save previous to history table
+        # and save new to data table
+        $previous = $request->previous;
+
+        $pms_pcr_core_function_data_histories = new PmsPcrCoreFunctionDataHistory();
+        $pms_pcr_core_function_data_histories->pms_pcr_core_function_data_id = $previous['id'];
+        $pms_pcr_core_function_data_histories->actual = $previous['actual'];
+        $pms_pcr_core_function_data_histories->quality = $previous['quality'];
+        $pms_pcr_core_function_data_histories->efficiency = $previous['efficiency'];
+        $pms_pcr_core_function_data_histories->timeliness = $previous['timeliness'];
+        $pms_pcr_core_function_data_histories->percent = $previous['percent'];
+        $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
+        $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
+        $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
+        $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $auth_id;
+        $pms_pcr_core_function_data_histories->created_by_type = 'usr/sup/dh/pmt'; //$previous['created_by_type'];
+        $pms_pcr_core_function_data_histories->save();
+        
+        return $previous;
+        // return $request;
+        return json_encode($changes_were_made);
     }
 
     public function save_recommendations($pms_pcr_status_id, Request $request)
@@ -37,7 +98,7 @@ class ReviewPerformanceCommitmentController extends Controller
         // return $pms_pcr_status_id;
     }
 
-    
+
     public function show($period_id)
     {
         $period = PmsPeriod::find($period_id);
@@ -47,7 +108,7 @@ class ReviewPerformanceCommitmentController extends Controller
         return Inertia("PMS/RPC/ReviewPerformanceCommitmentAndReview", ["period" => $period, "items" => $items]);
     }
 
-    
+
 
     public function showPcr($pms_pcr_status_id)
     {

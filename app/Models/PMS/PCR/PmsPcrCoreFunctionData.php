@@ -10,12 +10,12 @@ class PmsPcrCoreFunctionData extends Model
     use HasFactory;
 
     protected $appends = [
-        'corrections'
+        'histories'
     ];
 
-    public function getCorrectionsAttribute()
+    public function getHistoriesAttribute()
     {
-        $data = PmsPcrCoreFunctionDataCorrection::where('pms_pcr_core_function_data_id', $this->id)->orderByDesc('id')->get();
+        $data = PmsPcrCoreFunctionDataHistory::where('pms_pcr_core_function_data_id', $this->id)->orderByDesc('id')->get();
 
         return $data;
     }

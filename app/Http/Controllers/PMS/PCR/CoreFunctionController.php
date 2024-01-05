@@ -10,7 +10,7 @@ use App\Models\PMS\PmsPeriod;
 use App\Models\PMS\RSM\PmsRsm;
 use App\Models\PMS\RSM\PmsRsmAssignment;
 use App\Models\PMS\RSM\PmsRsmSuccessIndicator;
-use App\Models\PMS\PCR\PmsPcrCoreFunctionDataCorrection;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionDataHistory;
 use App\Models\SysEmployee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -193,7 +193,7 @@ class CoreFunctionController extends Controller
             # check if user is pmt
 
             elseif ($auth_sys_employees_id == $pms_pcr_status['immediate_supervisor']) {
-                $accomplishment_data = new PmsPcrCoreFunctionDataCorrection();
+                $accomplishment_data = new PmsPcrCoreFunctionDataHistory();
                 $accomplishment_data->pms_pcr_core_function_data_id = $request->id;
 
                 $accomplishment_data->actual = $request->actual;
