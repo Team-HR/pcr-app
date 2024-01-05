@@ -167,6 +167,8 @@ class CoreFunctionController extends Controller
             $accomplishment_data->percent = $request->percent;
             $accomplishment_data->remarks = $request->remarks;
             $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
+            $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
+            $accomplishment_data->created_by_type = 'usr';
         }
         # else do edit
         else {
@@ -186,26 +188,27 @@ class CoreFunctionController extends Controller
                 $accomplishment_data->percent = $request->percent;
                 $accomplishment_data->remarks = $request->remarks;
                 $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
+                $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
+                $accomplishment_data->created_by_type = 'usr';
             }
 
             # check if user is supervisor
             # check if user is department head
             # check if user is pmt
+            // elseif ($auth_sys_employees_id == $pms_pcr_status['immediate_supervisor']) {
+            //     $accomplishment_data = new PmsPcrCoreFunctionDataHistory();
+            //     $accomplishment_data->pms_pcr_core_function_data_id = $request->id;
 
-            elseif ($auth_sys_employees_id == $pms_pcr_status['immediate_supervisor']) {
-                $accomplishment_data = new PmsPcrCoreFunctionDataHistory();
-                $accomplishment_data->pms_pcr_core_function_data_id = $request->id;
-
-                $accomplishment_data->actual = $request->actual;
-                $accomplishment_data->quality = $request->quality;
-                $accomplishment_data->efficiency = $request->efficiency;
-                $accomplishment_data->timeliness = $request->timeliness;
-                $accomplishment_data->percent = $request->percent;
-                $accomplishment_data->remarks = $request->remarks;
-                $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
-                $accomplishment_data->created_by_sys_employee_id = $auth_sys_employees_id;
-                $accomplishment_data->created_by_type = "supervisor";
-            }
+            //     $accomplishment_data->actual = $request->actual;
+            //     $accomplishment_data->quality = $request->quality;
+            //     $accomplishment_data->efficiency = $request->efficiency;
+            //     $accomplishment_data->timeliness = $request->timeliness;
+            //     $accomplishment_data->percent = $request->percent;
+            //     $accomplishment_data->remarks = $request->remarks;
+            //     $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
+            //     $accomplishment_data->created_by_sys_employee_id = $auth_sys_employees_id;
+            //     $accomplishment_data->created_by_type = "supervisor";
+            // }
         }
         $accomplishment_data->save();
         return Redirect::back();
