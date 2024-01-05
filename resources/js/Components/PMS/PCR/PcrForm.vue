@@ -10,16 +10,20 @@ td {
 </style>
 <script>
 import RecommendationsEditor from "@/Components/PMS/PCR/RecommendationsEditor.vue";
+import Correction from "@/Components/PMS/PCR/CoreFunctionAccomplishmentEditor.vue";
+
 export default {
     props: {
         form_status: null,
         strategic_function: null,
         core_functions: null,
         support_functions: null,
+        edit_accomplishment: false,
     },
     components: {
         // AuthLayout,
         RecommendationsEditor,
+        Correction, //edit_accomplishment_modal
     },
     data() {
         return {
@@ -29,6 +33,9 @@ export default {
     created() {},
     computed: {},
     methods: {
+        editCoreFunctions() {
+            this.edit_accomplishment = true;
+        },
         indent(level) {
             var margin = "";
             if (level > 0) {
@@ -208,6 +215,7 @@ export default {
                                 Rating Matrix
                             </th>
                             <th rowspan="2">Remarks</th>
+                            <th rowspan="2">Options</th>
                         </tr>
                         <tr
                             style="
@@ -224,7 +232,7 @@ export default {
                     </tbody>
                     <tbody style="font-size: 14px">
                         <tr style="background: #f7f70026">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <b>Strategic Function</b>
                                 <span v-if="strategic_function"
                                     >(<b style="color: blue"
@@ -252,12 +260,12 @@ export default {
                             <td></td>
                         </tr>
                         <tr v-else>
-                            <td colspan="8" class="text-center text-gray-500">
+                            <td colspan="9" class="text-center text-gray-500">
                                 N/A
                             </td>
                         </tr>
                         <tr style="background: #f7f70026">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <b>Core Function</b> (<b style="color: blue"
                                     >60%</b
                                 >)
@@ -280,7 +288,7 @@ export default {
                   </template>
                 </td> -->
                                 <!-- if  mfo has no success indicator (title) conditioned colspan if has multiple success indicator -->
-                                <td :colspan="row.mfo_only ? 8 : 1">
+                                <td :colspan="row.mfo_only ? 9 : 1">
                                     <div :style="indent(row.level)">
                                         <template
                                             v-if="
@@ -365,6 +373,14 @@ export default {
                                                         .remarks
                                                 }}
                                             </td>
+                                            <td
+                                                class="flex justify-content-center flex-wrap"
+                                            >
+                                                <!-- {{ row }} -->
+                                                <Correction
+                                                    :core_function="row"
+                                                />
+                                            </td>
                                         </template>
                                         <template v-else>
                                             <td
@@ -392,7 +408,7 @@ export default {
                     </td> -->
                                     </template>
                                     <template v-else>
-                                        <td colspan="8" class="text-center">
+                                        <td colspan="9" class="text-center">
                                             <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
                               @click="add_accomplishment(row)"></Button>
                       <Button label="Not Applicable"
@@ -518,7 +534,7 @@ export default {
                   </td> -->
                                 </template>
                                 <template v-else>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
                             @click="add_accomplishment(row)"></Button>
                     <Button label="Not Applicable"
@@ -610,7 +626,7 @@ export default {
                   </td> -->
                                 </template>
                                 <template v-else>
-                                    <td colspan="8" class="text-center">
+                                    <td colspan="9" class="text-center">
                                         <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
                             @click="add_accomplishment(row)"></Button>
                     <Button label="Not Applicable"
@@ -632,7 +648,7 @@ export default {
                         <!-- core function end -->
 
                         <tr style="background: #f7f70026">
-                            <td colspan="8"><b>Support Function</b></td>
+                            <td colspan="9"><b>Support Function</b></td>
 
                             <td style="display: none"></td>
                             <td style="display: none"></td>
@@ -741,15 +757,14 @@ export default {
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="8" style="font-size: 12px">
+                            <td colspan="9" style="font-size: 12px">
                                 <b
                                     >Comments and Recommendation For Development
                                     Purpose</b
                                 >
                                 :
-                              
-                                    <RecommendationsEditor />
-                               
+
+                                <RecommendationsEditor />
                             </td>
                         </tr>
                     </tbody>

@@ -113,6 +113,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get("/pms/rpc/{pms_pcr_status_id}/form", [ReviewPerformanceCommitmentController::class, "showPcr"]);
     Route::post("/pms/rpc/{pms_pcr_status_id}/form/save_recommendations", [ReviewPerformanceCommitmentController::class, "save_recommendations"]);
     Route::get("/pms/rpc/{pms_pcr_status_id}/form/get_recommendations", [ReviewPerformanceCommitmentController::class, "get_recommendations"]);
+    Route::post("/pms/rpc/{pms_pcr_status_id}/form/save_corrections", [ReviewPerformanceCommitmentController::class, "save_corrections"]);
+
+
     Route::post("/pms/rpc/{period_id}/form/accomplishment", [CoreFunctionController::class, "create_update"]);
 
     # pmt - performance management team

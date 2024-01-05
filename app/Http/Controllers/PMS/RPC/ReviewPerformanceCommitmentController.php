@@ -81,10 +81,10 @@ class ReviewPerformanceCommitmentController extends Controller
         $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
         $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
         $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
-        $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $auth_id;
-        $pms_pcr_core_function_data_histories->created_by_type = 'usr/sup/dh/pmt'; //$previous['created_by_type'];
+        $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $previous['created_by_sys_employee_id'];
+        $pms_pcr_core_function_data_histories->created_by_type = $previous['created_by_type'];
         $pms_pcr_core_function_data_histories->save();
-        
+
         return $previous;
         // return $request;
         return json_encode($changes_were_made);

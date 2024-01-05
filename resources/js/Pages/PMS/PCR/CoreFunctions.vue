@@ -499,6 +499,38 @@ import { Head } from "@inertiajs/vue3";
                         </tr>
                     </table>
                     <!-- table end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <!-- add accomplishment modal start -->
                     <Dialog
                         header="Edit Accomplishment"
@@ -661,6 +693,47 @@ import { Head } from "@inertiajs/vue3";
                         </template>
                     </Dialog>
                     <!-- add accomplishment modal end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     <!-- not applicable modal start -->
                     <Dialog
