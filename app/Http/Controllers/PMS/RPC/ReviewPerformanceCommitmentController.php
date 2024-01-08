@@ -95,7 +95,13 @@ class ReviewPerformanceCommitmentController extends Controller
         $file = PmsPcrStatus::find($pms_pcr_status_id);
         $file->recommendations = $request->recommendations;
         $file->save();
-        // return $pms_pcr_status_id;
+    }
+
+    public function revert($pms_pcr_status_id)
+    {
+        $file = PmsPcrStatus::find($pms_pcr_status_id);
+        $file->is_submitted = 0;
+        $file->save();
     }
 
 

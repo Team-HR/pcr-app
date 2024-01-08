@@ -11,6 +11,7 @@ td {
 <script>
 import RecommendationsEditor from "@/Components/PMS/PCR/RecommendationsEditor.vue";
 import Correction from "@/Components/PMS/PCR/CoreFunctionAccomplishmentEditor.vue";
+import { router } from "@inertiajs/vue3";
 
 export default {
     props: {
@@ -36,6 +37,16 @@ export default {
         editCoreFunctions() {
             this.edit_accomplishment = true;
         },
+        revertForm() {
+            axios.post(router.page.url + "/revert").then(() => {
+                this.$toast.add({
+                    severity: "info",
+                    summary: "Form sent back to personnel!",
+                    detail: "Recommendations successfully reverted!",
+                    life: 3000,
+                });
+            });
+        },
         indent(level) {
             var margin = "";
             if (level > 0) {
@@ -49,13 +60,14 @@ export default {
     },
 
     mounted() {
-        console.log(this.form_status);
-        console.log(this.core_functions);
-        console.log(this.support_functions);
+        // console.log(this.form_status);
+        // console.log(this.core_functions);
+        // console.log(this.support_functions);
     },
 };
 </script>
 <template>
+    <Toast />
     <div class="flex justify-content-center flex-wrap">
         <Card style="font-size: 12px; width: 11.7in; /*height: 8.3in;*/">
             <template #content>
@@ -280,13 +292,6 @@ export default {
                                 v-if="row.rowspan == 0 && row.si_only == false"
                                 :class="row.mfo_only ? '_bg-primary-50' : ''"
                             >
-                                <!-- <td v-if="!row.mfo_only" class="text-center">
-                  <template v-if="row.pms_pcr_core_function_data">
-                    <span v-if="row.pms_pcr_core_function_data.percent
-                      ">{{ row.pms_pcr_core_function_data.percent }}%
-                    </span>
-                  </template>
-                </td> -->
                                 <!-- if  mfo has no success indicator (title) conditioned colspan if has multiple success indicator -->
                                 <td :colspan="row.mfo_only ? 9 : 1">
                                     <div :style="indent(row.level)">
@@ -394,27 +399,12 @@ export default {
                                                 }}
                                             </td>
                                         </template>
-                                        <!-- <td></td>
-                    <td class="text-center">
-                      <Button v-if="!row.pms_pcr_core_function_data
-                            .not_applicable
-                          " label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                              @click="edit_accomplishment(row)" />
-                      <Button v-else label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                              @click="edit_not_applicable(row)" />
-                      <Button label="Clear" icon="bi bi-arrow-counterclockwise"
-                              class="p-button-sm p-button-text p-button-warning p-2 m-1"
-                              @click="confirm_accomplishment_reset(row)" />
-                    </td> -->
                                     </template>
                                     <template v-else>
-                                        <td colspan="9" class="text-center">
-                                            <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
-                              @click="add_accomplishment(row)"></Button>
-                      <Button label="Not Applicable"
-                              class="p-button-danger p-button-small p-button-raised w-4 mt-2 ml-3 p-1"
-                              @click="not_applicable(row)"></Button> -->
-                                        </td>
+                                        <td
+                                            colspan="9"
+                                            class="text-center"
+                                        ></td>
                                     </template>
                                 </template>
                             </tr>
@@ -424,14 +414,6 @@ export default {
                                     row.rowspan > 0 && row.si_only == false
                                 "
                             >
-                                <!-- <td class="text-center text-center">
-                  <template v-if="row.pms_pcr_core_function_data">
-                    <span v-if="row.pms_pcr_core_function_data.percent
-                      ">{{
-    row.pms_pcr_core_function_data.percent
-  }}%</span>
-                  </template>
-                </td> -->
                                 <td :rowspan="row.rowspan">
                                     <div :style="indent(row.level)">
                                         <template
@@ -520,40 +502,14 @@ export default {
                                             }}
                                         </td>
                                     </template>
-                                    <!-- <td></td>
-                  <td class="text-center">
-                    <Button v-if="!row.pms_pcr_core_function_data
-                      .not_applicable
-                      " label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                            @click="edit_accomplishment(row)" />
-                    <Button v-else label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                            @click="edit_not_applicable(row)" />
-                    <Button label="Clear" icon="bi bi-arrow-counterclockwise"
-                            class="p-button-sm p-button-text p-button-warning p-2 m-1"
-                            @click="confirm_accomplishment_reset(row)" />
-                  </td> -->
                                 </template>
                                 <template v-else>
-                                    <td colspan="9" class="text-center">
-                                        <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
-                            @click="add_accomplishment(row)"></Button>
-                    <Button label="Not Applicable"
-                            class="p-button-danger p-button-small p-button-raised w-4 mt-2 ml-3 p-1"
-                            @click="not_applicable(row)"></Button> -->
-                                    </td>
+                                    <td colspan="9" class="text-center"></td>
                                 </template>
                                 <!-- accomplish interface end -->
                             </tr>
                             <!-- succeding success indicator from above -->
                             <tr v-else>
-                                <!-- <td class="text-center">
-                  <template v-if="row.pms_pcr_core_function_data">
-                    <span v-if="row.pms_pcr_core_function_data.percent
-                      ">{{
-    row.pms_pcr_core_function_data.percent
-  }}%</span>
-                  </template>
-                </td> -->
                                 <td>{{ row.success_indicator }}</td>
                                 <template v-if="row.pms_pcr_core_function_data">
                                     <template
@@ -612,27 +568,9 @@ export default {
                                             }}
                                         </td>
                                     </template>
-                                    <!-- <td></td>
-                  <td class="text-center">
-                    <Button v-if="!row.pms_pcr_core_function_data
-                      .not_applicable
-                      " label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                            @click="edit_accomplishment(row)" />
-                    <Button v-else label="Edit" icon="bi bi-pencil" class="p-button-sm p-button-text p-2 m-1"
-                            @click="edit_not_applicable(row)" />
-                    <Button label="Clear" icon="bi bi-arrow-counterclockwise"
-                            class="p-button-sm p-button-text p-button-warning p-2 m-1"
-                            @click="confirm_accomplishment_reset(row)" />
-                  </td> -->
                                 </template>
                                 <template v-else>
-                                    <td colspan="9" class="text-center">
-                                        <!-- <Button label="Add Accomplishment" class="p-button-text p-button-small p-button-raised w-4 p-1"
-                            @click="add_accomplishment(row)"></Button>
-                    <Button label="Not Applicable"
-                            class="p-button-danger p-button-small p-button-raised w-4 mt-2 ml-3 p-1"
-                            @click="not_applicable(row)"></Button> -->
-                                    </td>
+                                    <td colspan="9" class="text-center"></td>
                                 </template>
                             </tr>
                         </template>
@@ -916,6 +854,24 @@ export default {
                     </thead>
                 </table>
                 <!-- final signatories end -->
+                <div class="flex justify-content-center flex-wrap mt-2">
+                    <Button
+                        @click="revertForm()"
+                        outlined
+                        class="m-2"
+                        severity="danger"
+                        label="Revert"
+                        icon="pi pi-undo"
+                    />
+                    <Button
+                        @click=""
+                        outlined
+                        class="m-2"
+                        severity="success"
+                        label="Approve"
+                        icon="pi pi-check-circle"
+                    />
+                </div>
             </template>
         </Card>
     </div>
