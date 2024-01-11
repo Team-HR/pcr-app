@@ -494,42 +494,12 @@ import { Head } from "@inertiajs/vue3";
                                 colspan="11"
                                 style="text-align: center"
                             >
-                                No records found! Please setup the Rating Scale Matrix for this period.
+                                No records found! Please setup the Rating Scale
+                                Matrix for this period.
                             </td>
                         </tr>
                     </table>
                     <!-- table end -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     <!-- add accomplishment modal start -->
                     <Dialog
@@ -565,7 +535,7 @@ import { Head } from "@inertiajs/vue3";
                                     Actual Accomplishment:
                                 </div>
                                 <Textarea
-                                    v-model="accomplishment.actual"
+                                    v-model="accomplishment.new.actual"
                                     :autoResize="true"
                                     rows="5"
                                     class="w-full"
@@ -593,7 +563,7 @@ import { Head } from "@inertiajs/vue3";
                                             name="quality"
                                             :value="5 - i"
                                             :id="`quality${i}`"
-                                            v-model="accomplishment.quality"
+                                            v-model="accomplishment.new.quality"
                                             required
                                         />
                                         <label :for="`quality${i}`">{{
@@ -619,7 +589,9 @@ import { Head } from "@inertiajs/vue3";
                                             name="efficiency"
                                             :value="5 - i"
                                             :id="`efficiency${i}`"
-                                            v-model="accomplishment.efficiency"
+                                            v-model="
+                                                accomplishment.new.efficiency
+                                            "
                                             required
                                         />
                                         <label :for="`efficiency${i}`">{{
@@ -645,7 +617,9 @@ import { Head } from "@inertiajs/vue3";
                                             name="timeliness"
                                             :value="5 - i"
                                             :id="`timeliness${i}`"
-                                            v-model="accomplishment.timeliness"
+                                            v-model="
+                                                accomplishment.new.timeliness
+                                            "
                                             required
                                         />
                                         <label :for="`timeliness${i}`">{{
@@ -659,7 +633,7 @@ import { Head } from "@inertiajs/vue3";
                                 <!-- <InputNumber placeholder="-- % " /> -->
                                 <InputNumber
                                     inputId="percent"
-                                    v-model="accomplishment.percent"
+                                    v-model="accomplishment.new.percent"
                                     suffix="%"
                                     placeholder="--%"
                                     required
@@ -672,7 +646,7 @@ import { Head } from "@inertiajs/vue3";
                                     rows="5"
                                     class="w-full"
                                     placeholder="Enter remarks here."
-                                    v-model="accomplishment.remarks"
+                                    v-model="accomplishment.new.remarks"
                                 />
                             </div>
                         </form>
@@ -694,47 +668,6 @@ import { Head } from "@inertiajs/vue3";
                     </Dialog>
                     <!-- add accomplishment modal end -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <!-- not applicable modal start -->
                     <Dialog
                         header="Not Applicable"
@@ -754,7 +687,7 @@ import { Head } from "@inertiajs/vue3";
                             <div class="field">
                                 <div class="font-bold mb-2">Reason:</div>
                                 <Textarea
-                                    v-model="accomplishment.actual"
+                                    v-model="accomplishment.new.actual"
                                     :autoResize="true"
                                     rows="5"
                                     class="w-full"
@@ -808,25 +741,39 @@ export default {
             core_function: null,
             // percentage_weight_remaining: null,
             accomplishment: this.$inertia.form({
-                form_status: this.$props.form_status,
-                id: null,
-                pms_rsm_success_indicator_id: null,
-                actual: null,
-                quality: null,
-                efficiency: null,
-                timeliness: null,
-                percent: null,
-                remarks: null,
-                not_applicable: null,
+                new: {
+                    form_status: this.$props.form_status,
+                    id: null,
+                    pms_rsm_success_indicator_id: null,
+                    actual: null,
+                    quality: null,
+                    efficiency: null,
+                    timeliness: null,
+                    percent: null,
+                    remarks: null,
+                    not_applicable: null,
+                },
+                old: {
+                    form_status: this.$props.form_status,
+                    id: null,
+                    pms_rsm_success_indicator_id: null,
+                    actual: null,
+                    quality: null,
+                    efficiency: null,
+                    timeliness: null,
+                    percent: null,
+                    remarks: null,
+                    not_applicable: null,
+                },
             }),
         };
     },
     methods: {
         not_applicable(row) {
-            this.accomplishment.id = null;
-            this.accomplishment.pms_rsm_success_indicator_id =
+            this.accomplishment.new.id = null;
+            this.accomplishment.new.pms_rsm_success_indicator_id =
                 row.pms_rsm_success_indicator_id;
-            this.accomplishment.not_applicable = true;
+            this.accomplishment.new.not_applicable = true;
             this.not_applicable_modal = true;
         },
         cancel_not_applicable() {
@@ -834,19 +781,21 @@ export default {
             this.clear_accomplishment();
         },
         edit_not_applicable(row) {
-            this.accomplishment.id = row.pms_pcr_core_function_data.id;
-            this.accomplishment.pms_rsm_success_indicator_id =
+            this.accomplishment.new.id = row.pms_pcr_core_function_data.id;
+            this.accomplishment.new.pms_rsm_success_indicator_id =
                 row.pms_rsm_success_indicator_id;
-            this.accomplishment.actual = row.pms_pcr_core_function_data.actual;
-            this.accomplishment.not_applicable = true;
+            this.accomplishment.new.actual =
+                row.pms_pcr_core_function_data.actual;
+            this.accomplishment.new.not_applicable = true;
             this.not_applicable_modal = true;
         },
         submit_not_applicable() {
             console.log(this.accomplishment);
+            return false;
             this.accomplishment.post(this.current_url + "/accomplishment", {
                 preserveScroll: true,
                 onSuccess: () => {
-                    if (!this.accomplishment.id) {
+                    if (!this.accomplishment.new.id) {
                         this.$toast.add({
                             severity: "info",
                             summary: "Note!",
@@ -870,7 +819,7 @@ export default {
             this.accomplishment.post(this.current_url + "/accomplishment", {
                 preserveScroll: true,
                 onSuccess: () => {
-                    if (!this.accomplishment.id) {
+                    if (!this.accomplishment.new.id) {
                         this.$toast.add({
                             severity: "success",
                             summary: "Accomplished!",
@@ -893,8 +842,8 @@ export default {
         add_accomplishment(row) {
             console.log(row);
             this.core_function = row;
-            this.accomplishment.id = null;
-            this.accomplishment.pms_rsm_success_indicator_id =
+            this.accomplishment.new.id = null;
+            this.accomplishment.new.pms_rsm_success_indicator_id =
                 row.pms_rsm_success_indicator_id;
             this.edit_accomplishment_modal = true;
         },
@@ -904,32 +853,33 @@ export default {
         },
         edit_accomplishment(row) {
             this.core_function = row;
-            this.accomplishment.id = row.pms_pcr_core_function_data.id;
-            this.accomplishment.pms_rsm_success_indicator_id =
+            this.accomplishment.new.id = row.pms_pcr_core_function_data.id;
+            this.accomplishment.new.pms_rsm_success_indicator_id =
                 row.pms_rsm_success_indicator_id;
-            this.accomplishment.actual = row.pms_pcr_core_function_data.actual;
-            this.accomplishment.quality =
+            this.accomplishment.new.actual =
+                row.pms_pcr_core_function_data.actual;
+            this.accomplishment.new.quality =
                 row.pms_pcr_core_function_data.quality;
-            this.accomplishment.efficiency =
+            this.accomplishment.new.efficiency =
                 row.pms_pcr_core_function_data.efficiency;
-            this.accomplishment.timeliness =
+            this.accomplishment.new.timeliness =
                 row.pms_pcr_core_function_data.timeliness;
-            this.accomplishment.percent =
+            this.accomplishment.new.percent =
                 row.pms_pcr_core_function_data.percent;
-            this.accomplishment.remarks =
+            this.accomplishment.new.remarks =
                 row.pms_pcr_core_function_data.remarks;
             this.edit_accomplishment_modal = true;
         },
         clear_accomplishment() {
-            this.accomplishment.id = null;
-            this.accomplishment.pms_rsm_success_indicator_id = null;
-            this.accomplishment.actual = null;
-            this.accomplishment.quality = null;
-            this.accomplishment.efficiency = null;
-            this.accomplishment.timeliness = null;
-            this.accomplishment.percent = null;
-            this.accomplishment.remarks = null;
-            this.accomplishment.not_applicable = null;
+            this.accomplishment.new.id = null;
+            this.accomplishment.new.pms_rsm_success_indicator_id = null;
+            this.accomplishment.new.actual = null;
+            this.accomplishment.new.quality = null;
+            this.accomplishment.new.efficiency = null;
+            this.accomplishment.new.timeliness = null;
+            this.accomplishment.new.percent = null;
+            this.accomplishment.new.remarks = null;
+            this.accomplishment.new.not_applicable = null;
         },
         confirm_accomplishment_reset(row) {
             this.$confirm.require({

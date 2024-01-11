@@ -149,24 +149,29 @@ class CoreFunctionController extends Controller
 
     public function create_update($period_id, $id = 0, Request $request)
     {
-        $pms_pcr_status = $request->form_status;
+        // return $request->all();
+        $pms_pcr_status = $request->new['form_status'];
         // return  $request->all();
         $sys_employee_id = $pms_pcr_status["sys_employee_id"];
         // return $sys_employee_id;
         $auth_sys_employees_id = auth()->user()->sys_employee_id;
         // return $auth_sys_employees_id; //auth()->user();
-        if (!$request->id) {
+
+        $new = $request->new;
+        // return $new['pms_rsm_success_indicator_id'];
+        if (!$new['id']) {
             $accomplishment_data = new PmsPcrCoreFunctionData();
-            $accomplishment_data->pms_rsm_success_indicator_id = $request->pms_rsm_success_indicator_id;
+            $accomplishment_data->pms_rsm_success_indicator_id = $new['pms_rsm_success_indicator_id'];
             $accomplishment_data->pms_period_id = $period_id;
             $accomplishment_data->sys_employee_id = $sys_employee_id;
-            $accomplishment_data->actual = $request->actual;
-            $accomplishment_data->quality = $request->quality;
-            $accomplishment_data->efficiency = $request->efficiency;
-            $accomplishment_data->timeliness = $request->timeliness;
-            $accomplishment_data->percent = $request->percent;
-            $accomplishment_data->remarks = $request->remarks;
-            $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
+            $accomplishment_data->actual = $new['actual'];
+            $accomplishment_data->quality = $new['quality'];
+            $accomplishment_data->efficiency = $new['efficiency'];
+            $accomplishment_data->timeliness = $new['timeliness'];
+            $accomplishment_data->percent = $new['percent'];
+            $accomplishment_data->remarks = $new['remarks'];
+            $accomplishment_data->not_applicable = $new['not_applicable'] ? true : false;
+            $accomplishment_data->changes = NULL;
             $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
             $accomplishment_data->created_by_type = 'usr';
         }
@@ -175,19 +180,44 @@ class CoreFunctionController extends Controller
             # check if user is supervisor
             # check if user is department head
             # check if user is pmt
-            # check if user is employee        
+            # check if user is employee
+
+            return $request->all();
+            # check if changes were made
+            $changes = [
+                'actual' => false,
+                'quality' => false,
+                'efficiency' => false,
+                'timeliness' => false,
+                'percent' => false,
+                'remarks' => false,
+            ];
+
+            $changes_were_made = false;
+
+            foreach ($changes as $key => $value) {
+                if ($request->old[$key] != $request->new[$key]) {
+                    $changes[$key] = true;
+                    if ($changes_were_made != true) {
+                        $changes_were_made = true;
+                    }
+                }
+            }
+
+
             if ($sys_employee_id == $auth_sys_employees_id) {
-                $accomplishment_data = PmsPcrCoreFunctionData::find($request->id);
-                $accomplishment_data->pms_rsm_success_indicator_id = $request->pms_rsm_success_indicator_id;
+                $accomplishment_data = PmsPcrCoreFunctionData::find($new['id']);
+                $accomplishment_data->pms_rsm_success_indicator_id = $new['pms_rsm_success_indicator_id'];
                 $accomplishment_data->pms_period_id = $period_id;
                 $accomplishment_data->sys_employee_id = $sys_employee_id;
-                $accomplishment_data->actual = $request->actual;
-                $accomplishment_data->quality = $request->quality;
-                $accomplishment_data->efficiency = $request->efficiency;
-                $accomplishment_data->timeliness = $request->timeliness;
-                $accomplishment_data->percent = $request->percent;
-                $accomplishment_data->remarks = $request->remarks;
-                $accomplishment_data->not_applicable = $request->not_applicable ? true : false;
+                $accomplishment_data->actual = $new['actual'];
+                $accomplishment_data->quality = $new['quality'];
+                $accomplishment_data->efficiency = $new['efficiency'];
+                $accomplishment_data->timeliness = $new['timeliness'];
+                $accomplishment_data->percent = $new['percent'];
+                $accomplishment_data->remarks = $new['remarks'];
+                $accomplishment_data->not_applicable = $new['not_applicable'] ? true : false;
+                $accomplishment_data->changes = json_encode($changes);
                 $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
                 $accomplishment_data->created_by_type = 'usr';
             }

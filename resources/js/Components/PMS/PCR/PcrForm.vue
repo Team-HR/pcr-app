@@ -45,7 +45,10 @@ export default {
                     detail: "Recommendations successfully reverted!",
                     life: 3000,
                 });
+                // go back to personnel list
+                // router.visit("/pms/rpc/" + this.form_status.pms_period_id);
             });
+            // console.log(this.form_status.pms_period_id);
         },
         indent(level) {
             var margin = "";
@@ -855,14 +858,14 @@ export default {
                 </table>
                 <!-- final signatories end -->
                 <div class="flex justify-content-center flex-wrap mt-2">
-                    <Button
+                    <!-- <Button
                         @click="revertForm()"
                         outlined
                         class="m-2"
                         severity="danger"
                         label="Revert"
                         icon="pi pi-undo"
-                    />
+                    /> -->
                     <Button
                         @click=""
                         outlined

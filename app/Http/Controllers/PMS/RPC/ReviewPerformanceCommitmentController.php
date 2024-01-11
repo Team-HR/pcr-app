@@ -80,6 +80,7 @@ class ReviewPerformanceCommitmentController extends Controller
         $pms_pcr_core_function_data_histories->percent = $previous['percent'];
         $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
         $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
+        // $pms_pcr_core_function_data_histories->changes = json_encode($changes);
         $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
         $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $previous['created_by_sys_employee_id'];
         $pms_pcr_core_function_data_histories->created_by_type = $previous['created_by_type'];

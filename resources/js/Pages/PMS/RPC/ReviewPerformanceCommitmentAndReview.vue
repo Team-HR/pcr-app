@@ -67,8 +67,8 @@ import PeriodSelector from "@/Components/PMS/PeriodSelector.vue";
                             <!-- <td>{{ item.label }}</td>
             <td class="" v-html="item.status"></td> -->
                             <td colspan="3">
+                                <!-- :disabled="!item.is_submitted" -->
                                 <Button
-                                    :disabled="!item.is_submitted"
                                     label="Open"
                                     @click="
                                         $inertia.get(`/pms/rpc/${item.id}/form`)
