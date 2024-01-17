@@ -868,6 +868,12 @@ export default {
                 row.pms_pcr_core_function_data.percent;
             this.accomplishment.new.remarks =
                 row.pms_pcr_core_function_data.remarks;
+
+            // console.log("edit_accomplishment: ",row.pms_pcr_core_function_data)
+            this.accomplishment.old = JSON.parse(
+                JSON.stringify(row.pms_pcr_core_function_data)
+            );
+
             this.edit_accomplishment_modal = true;
         },
         clear_accomplishment() {

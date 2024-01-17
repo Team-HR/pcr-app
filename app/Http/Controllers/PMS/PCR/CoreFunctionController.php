@@ -136,8 +136,6 @@ class CoreFunctionController extends Controller
             }
         }
 
-
-
         $period = PmsPeriod::find($period_id);
         $form_status = PmsPcrStatus::find($pms_pcr_status_id);
         $total_percentage_weight = get_total_percentage_weight($rows);
@@ -158,6 +156,7 @@ class CoreFunctionController extends Controller
         // return $auth_sys_employees_id; //auth()->user();
 
         $new = $request->new;
+        $old = $request->old;
         // return $new['pms_rsm_success_indicator_id'];
         if (!$new['id']) {
             $accomplishment_data = new PmsPcrCoreFunctionData();
@@ -182,7 +181,7 @@ class CoreFunctionController extends Controller
             # check if user is pmt
             # check if user is employee
 
-            return $request->all();
+            // return $request->all();
             # check if changes were made
             $changes = [
                 'actual' => false,
@@ -204,8 +203,9 @@ class CoreFunctionController extends Controller
                 }
             }
 
-
+            // return $old;
             if ($sys_employee_id == $auth_sys_employees_id) {
+                // save new accomplishment to curr table
                 $accomplishment_data = PmsPcrCoreFunctionData::find($new['id']);
                 $accomplishment_data->pms_rsm_success_indicator_id = $new['pms_rsm_success_indicator_id'];
                 $accomplishment_data->pms_period_id = $period_id;
@@ -220,6 +220,25 @@ class CoreFunctionController extends Controller
                 $accomplishment_data->changes = json_encode($changes);
                 $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
                 $accomplishment_data->created_by_type = 'usr';
+
+                // save old accomplishment to history table
+                // pms_pcr_core_function_data_histories
+                $history_data = new PmsPcrCoreFunctionDataHistory();
+                $history_data->pms_pcr_core_function_data_id = $new['id'];
+                // $history_data->pms_period_id = $period_id;
+                // $history_data->sys_employee_id = $sys_employee_id;
+                $history_data->actual = $old['actual'];
+                $history_data->quality = $old['quality'];
+                $history_data->efficiency = $old['efficiency'];
+                $history_data->timeliness = $old['timeliness'];
+                $history_data->percent = $old['percent'];
+                $history_data->remarks = $old['remarks'];
+                $history_data->not_applicable = $old['not_applicable'] ? true : false;
+                $history_data->not_applicable_remarks = $old['not_applicable_remarks'];
+                $history_data->changes = json_encode($changes);
+                $history_data->created_by_sys_employee_id = $sys_employee_id;
+                $history_data->created_by_type = 'usr';
+                $history_data->save();
             }
 
             # check if user is supervisor
