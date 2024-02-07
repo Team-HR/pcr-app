@@ -39,9 +39,11 @@ class ReviewPerformanceCommitmentController extends Controller
      and new corrections to core_function_data table
     */
 
+
+
     public function save_corrections($pms_pcr_status_id, Request $request)
     {
-
+        // return $request;      
         $auth_id = Auth()->user()->id;
         # check if changes were made
         $changes = [
@@ -69,24 +71,11 @@ class ReviewPerformanceCommitmentController extends Controller
         # if exists store changes
         # save previous to history table
         # and save new to data table
+
+        save_to_pms_pcr_core_function_data($request->new, $changes);
         $previous = $request->previous;
-
-        $pms_pcr_core_function_data_histories = new PmsPcrCoreFunctionDataHistory();
-        $pms_pcr_core_function_data_histories->pms_pcr_core_function_data_id = $previous['id'];
-        $pms_pcr_core_function_data_histories->actual = $previous['actual'];
-        $pms_pcr_core_function_data_histories->quality = $previous['quality'];
-        $pms_pcr_core_function_data_histories->efficiency = $previous['efficiency'];
-        $pms_pcr_core_function_data_histories->timeliness = $previous['timeliness'];
-        $pms_pcr_core_function_data_histories->percent = $previous['percent'];
-        $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
-        $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
-        // $pms_pcr_core_function_data_histories->changes = json_encode($changes);
-        $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
-        $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $previous['created_by_sys_employee_id'];
-        $pms_pcr_core_function_data_histories->created_by_type = $previous['created_by_type'];
-        $pms_pcr_core_function_data_histories->save();
-
-        return $previous;
+        save_to_pms_pcr_core_function_data_histories($previous);
+        // return $previous;
         // return $request;
         return json_encode($changes_were_made);
     }
@@ -148,4 +137,43 @@ class ReviewPerformanceCommitmentController extends Controller
         //     "support_functions" => $support_functions
         // ]);
     }
+}
+
+
+function save_to_pms_pcr_core_function_data_histories($previous)
+{
+    $pms_pcr_core_function_data_histories = new PmsPcrCoreFunctionDataHistory();
+    $pms_pcr_core_function_data_histories->pms_pcr_core_function_data_id = $previous['id'];
+    $pms_pcr_core_function_data_histories->actual = $previous['actual'];
+    $pms_pcr_core_function_data_histories->quality = $previous['quality'];
+    $pms_pcr_core_function_data_histories->efficiency = $previous['efficiency'];
+    $pms_pcr_core_function_data_histories->timeliness = $previous['timeliness'];
+    $pms_pcr_core_function_data_histories->percent = $previous['percent'];
+    $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
+    $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
+    $pms_pcr_core_function_data_histories->changes = $previous['changes'];
+    $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
+    $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $previous['created_by_sys_employee_id'];
+    $pms_pcr_core_function_data_histories->created_by_type = $previous['created_by_type'];
+    $pms_pcr_core_function_data_histories->save();
+}
+
+
+function save_to_pms_pcr_core_function_data($new, $changes)
+{
+    $accomplishment_data = PmsPcrCoreFunctionData::find($new['id']);
+    $accomplishment_data->pms_rsm_success_indicator_id = $new['pms_rsm_success_indicator_id'];
+    $accomplishment_data->pms_period_id = $new['pms_period_id'];
+    $accomplishment_data->sys_employee_id = $new['sys_employee_id'];
+    $accomplishment_data->actual = $new['actual'];
+    $accomplishment_data->quality = $new['quality'];
+    $accomplishment_data->efficiency = $new['efficiency'];
+    $accomplishment_data->timeliness = $new['timeliness'];
+    $accomplishment_data->percent = $new['percent'];
+    $accomplishment_data->remarks = $new['remarks'];
+    $accomplishment_data->not_applicable = $new['not_applicable'] ? true : false;
+    $accomplishment_data->changes = json_encode($changes);
+    $accomplishment_data->created_by_sys_employee_id = auth()->user()->sys_employee_id;
+    $accomplishment_data->created_by_type = 'sup';
+    $accomplishment_data->save();
 }

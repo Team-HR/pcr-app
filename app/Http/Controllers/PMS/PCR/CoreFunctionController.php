@@ -235,9 +235,9 @@ class CoreFunctionController extends Controller
                 $history_data->remarks = $old['remarks'];
                 $history_data->not_applicable = $old['not_applicable'] ? true : false;
                 $history_data->not_applicable_remarks = $old['not_applicable_remarks'];
-                $history_data->changes = json_encode($changes);
-                $history_data->created_by_sys_employee_id = $sys_employee_id;
-                $history_data->created_by_type = 'usr';
+                $history_data->changes = $old['changes'];
+                $history_data->created_by_sys_employee_id = $old['created_by_sys_employee_id'];
+                $history_data->created_by_type = $old['created_by_type'];
                 $history_data->save();
             }
 
@@ -262,6 +262,13 @@ class CoreFunctionController extends Controller
         $accomplishment_data->save();
         return Redirect::back();
     }
+
+
+    // public function create_update_core_function()
+    // {
+        
+    // }
+
 
     public function delete_accomplishment($period_id, $status_id, $accomplishment_id)
     {
