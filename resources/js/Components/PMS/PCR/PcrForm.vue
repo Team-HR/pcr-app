@@ -34,6 +34,10 @@ export default {
     created() {},
     computed: {},
     methods: {
+        reload() {
+            // console.log("reload");
+            router.reload({ only: ["core_functions"] });
+        },
         editCoreFunctions() {
             this.edit_accomplishment = true;
         },
@@ -387,6 +391,7 @@ export default {
                                                 <!-- {{ row }} -->
                                                 <Correction
                                                     :core_function="row"
+                                                    @submitForm="reload"
                                                 />
                                             </td>
                                         </template>

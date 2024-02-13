@@ -145,6 +145,7 @@ import axios from "axios";
 import { router } from "@inertiajs/vue3";
 
 export default {
+    emits: ["submitForm"],
     props: {
         core_function: null,
     },
@@ -172,7 +173,7 @@ export default {
                         this.core_function.pms_pcr_core_function_data
                     )
                 );
-                console.log(this.accomplishment);
+                // console.log(this.accomplishment);
             }
         },
     },
@@ -185,7 +186,8 @@ export default {
                     new: this.accomplishment,
                 })
                 .then(({ data }) => {
-                    console.log("save_corrections: ", data);
+                    // console.log("save_corrections: ", data);
+                    this.$emit('submitForm')
                 });
             this.visible = false;
         },
