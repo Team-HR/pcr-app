@@ -13,6 +13,10 @@ class PmsPcrCoreFunctionData extends Model
         'histories'
     ];
 
+    // protected $casts = [
+    //     'changes' => array
+    // ];
+
     public function getHistoriesAttribute()
     {
         $data = PmsPcrCoreFunctionDataHistory::where('pms_pcr_core_function_data_id', $this->id)->orderByDesc('id')->get();

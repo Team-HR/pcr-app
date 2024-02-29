@@ -34,6 +34,12 @@ export default {
     created() {},
     computed: {},
     methods: {
+        revisionColor(pms_pcr_core_function_data) {
+            if (!pms_pcr_core_function_data) return null;
+            if (pms_pcr_core_function_data.created_by_type != "usr") {
+                return "text-red-500";
+            }
+        },
         reload() {
             // console.log("reload");
             router.reload({ only: ["core_functions"] });
@@ -68,7 +74,7 @@ export default {
 
     mounted() {
         // console.log(this.form_status);
-        // console.log(this.core_functions);
+        console.log(this.core_functions);
         // console.log(this.support_functions);
     },
 };
@@ -341,7 +347,13 @@ export default {
                                                     .not_applicable
                                             "
                                         >
-                                            <td>
+                                            <td
+                                                :class="
+                                                    revisionColor(
+                                                        row.pms_pcr_core_function_data
+                                                    )
+                                                "
+                                            >
                                                 {{
                                                     row
                                                         .pms_pcr_core_function_data
