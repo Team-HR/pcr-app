@@ -120,6 +120,28 @@
                     v-model="accomplishment.remarks"
                 />
             </div>
+            <div class="field bg-red-50 p-5">
+                <div class="font-bold mb-2">Correction Comment/s:</div>
+                <Textarea
+                    :autoResize="true"
+                    rows="5"
+                    class="w-full"
+                    placeholder="Enter comments here"
+                    required
+                    v-model="accomplishment.correction_comments"
+                />
+                <div class="my-2">
+                    <template
+                        v-for="(comment, c) in core_function
+                            .pms_pcr_core_function_data
+                            .correction_comments_data"
+                    >
+                        <!-- {{ comment }} -->
+                        <p class="uppercase">"{{ comment.correction_comments }}"</p>
+                        <p>-- {{ comment.created_by }} / <span class="uppercase">{{ comment.created_by_type }}</span></p>
+                    </template>
+                </div>
+            </div>
         </form>
 
         <template #footer>
@@ -161,6 +183,7 @@ export default {
                 timeliness: null,
                 percent: null,
                 remarks: null,
+                correction_comments: null,
             },
         };
     },
@@ -173,7 +196,7 @@ export default {
                         this.core_function.pms_pcr_core_function_data
                     )
                 );
-                // console.log(this.accomplishment);
+                console.log(this.core_function);
             }
         },
     },
@@ -186,8 +209,8 @@ export default {
                     new: this.accomplishment,
                 })
                 .then(({ data }) => {
-                    // console.log("save_corrections: ", data);
-                    this.$emit('submitForm')
+                    console.log("save_corrections: ", data);
+                    this.$emit("submitForm");
                 });
             this.visible = false;
         },
@@ -195,5 +218,9 @@ export default {
             this.visible = false;
         },
     },
+
+    // mounted() {
+    //     console.log('core_function: ', this.core_function);
+    // },
 };
 </script>

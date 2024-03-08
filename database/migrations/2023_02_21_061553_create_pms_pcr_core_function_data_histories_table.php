@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePmsPcrCoreFunctionDataCorrectionsTable extends Migration
+class CreatePmsPcrCoreFunctionDataHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePmsPcrCoreFunctionDataCorrectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pms_pcr_core_function_data_corrections', function (Blueprint $table) {
+        Schema::create('pms_pcr_core_function_data_histories', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('pms_pcr_core_function_data_id');
             $table->text('actual');
@@ -37,6 +37,6 @@ class CreatePmsPcrCoreFunctionDataCorrectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pms_pcr_core_function_data_corrections');
+        Schema::dropIfExists('pms_pcr_core_function_data_histories');
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\PMS\PCR\CoreFunctionController;
 use App\Http\Controllers\PMS\PCR\SupportFunctionController;
 use App\Models\PMS\PCR\PmsPcrCoreFunctionData;
+use App\Models\PMS\PCR\PmsPcrCoreFunctionDataCorrectionComment;
 use App\Models\PMS\PCR\PmsPcrCoreFunctionDataHistory;
 use App\Models\PMS\PCR\PmsPcrStatus;
 use App\Models\PMS\PCR\PmsPcrStrategicFunctionData;
@@ -43,7 +44,10 @@ class ReviewPerformanceCommitmentController extends Controller
 
     public function save_corrections($pms_pcr_status_id, Request $request)
     {
-        // return $request;      
+        // return $request;
+
+
+
         $auth_id = Auth()->user()->id;
         # check if changes were made
         $changes = [
@@ -72,6 +76,10 @@ class ReviewPerformanceCommitmentController extends Controller
         # save previous to history table
         # and save new to data table
 
+        // if (isset($request->new['correction_comments'])) {
+        save_correction_comments($request->new);
+        // }
+
         save_to_pms_pcr_core_function_data($request->new, $changes);
         $previous = $request->previous;
         save_to_pms_pcr_core_function_data_histories($previous);
@@ -79,6 +87,7 @@ class ReviewPerformanceCommitmentController extends Controller
         // return $request;
         return json_encode($changes_were_made);
     }
+
 
     public function save_recommendations($pms_pcr_status_id, Request $request)
     {
@@ -139,6 +148,18 @@ class ReviewPerformanceCommitmentController extends Controller
     }
 }
 
+function save_correction_comments($new)
+{
+    // return $new['id'];
+    $pms_pcr_core_function_data_correction_comment = new PmsPcrCoreFunctionDataCorrectionComment();
+    $pms_pcr_core_function_data_correction_comment->pms_pcr_core_function_data_id = $new['id'];
+    $pms_pcr_core_function_data_correction_comment->correction_comments = $new['correction_comments'];
+    $pms_pcr_core_function_data_correction_comment->created_by_sys_employee_id = $new['created_by_sys_employee_id'];
+    $pms_pcr_core_function_data_correction_comment->created_by_type = $new['created_by_type'];
+    $pms_pcr_core_function_data_correction_comment->save();
+    // return json_encode(["save_correction_comments" => $new]);
+}
+
 
 function save_to_pms_pcr_core_function_data_histories($previous)
 {
@@ -152,6 +173,7 @@ function save_to_pms_pcr_core_function_data_histories($previous)
     $pms_pcr_core_function_data_histories->remarks = $previous['remarks'];
     $pms_pcr_core_function_data_histories->not_applicable = $previous['not_applicable'];
     $pms_pcr_core_function_data_histories->changes = $previous['changes'];
+    // $pms_pcr_core_function_data_histories->correction_comments = $previous['correction_comments'];
     $pms_pcr_core_function_data_histories->not_applicable_remarks = $previous['not_applicable_remarks'];
     $pms_pcr_core_function_data_histories->created_by_sys_employee_id = $previous['created_by_sys_employee_id'];
     $pms_pcr_core_function_data_histories->created_by_type = $previous['created_by_type'];
@@ -161,6 +183,11 @@ function save_to_pms_pcr_core_function_data_histories($previous)
 
 function save_to_pms_pcr_core_function_data($new, $changes)
 {
+    // $corrections = [];
+
+    // $corrections[] = [
+    //     'sup' => $new['correction_comments']
+    // ];
     $accomplishment_data = PmsPcrCoreFunctionData::find($new['id']);
     $accomplishment_data->pms_rsm_success_indicator_id = $new['pms_rsm_success_indicator_id'];
     $accomplishment_data->pms_period_id = $new['pms_period_id'];
@@ -172,7 +199,8 @@ function save_to_pms_pcr_core_function_data($new, $changes)
     $accomplishment_data->percent = $new['percent'];
     $accomplishment_data->remarks = $new['remarks'];
     $accomplishment_data->not_applicable = $new['not_applicable'] ? true : false;
-    $accomplishment_data->changes = json_encode($changes);
+    $accomplishment_data->changes = $changes;
+    // $accomplishment_data->correction_comments =  $corrections;
     $accomplishment_data->created_by_sys_employee_id = auth()->user()->sys_employee_id;
     $accomplishment_data->created_by_type = 'sup';
     $accomplishment_data->save();

@@ -955,6 +955,7 @@ export default {
     created() {
         this.$inertia.reload({ only: ["rows"] });
         this.formStatusId = this.$inertia.page.url.split("/")[5];
+        console.log(this.rows);
     },
     mounted() {},
 };

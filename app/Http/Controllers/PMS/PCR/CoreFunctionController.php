@@ -217,7 +217,7 @@ class CoreFunctionController extends Controller
                 $accomplishment_data->percent = $new['percent'];
                 $accomplishment_data->remarks = $new['remarks'];
                 $accomplishment_data->not_applicable = $new['not_applicable'] ? true : false;
-                $accomplishment_data->changes = json_encode($changes);
+                $accomplishment_data->changes = $changes;
                 $accomplishment_data->created_by_sys_employee_id = $sys_employee_id;
                 $accomplishment_data->created_by_type = 'usr';
 
@@ -266,7 +266,7 @@ class CoreFunctionController extends Controller
 
     // public function create_update_core_function()
     // {
-        
+
     // }
 
 
@@ -445,6 +445,9 @@ function get_pms_pcr_core_function_data($pms_rsm_success_indicator_id)
         $average = bcdiv($average, 1, 2);
         $pms_pcr_core_function_data["average"] = $average;
     }
+
+    // get corrections
+    // $pms_pcr_core_function_data ["correction_comments"] = 'testing';
     return $pms_pcr_core_function_data;
 }
 
