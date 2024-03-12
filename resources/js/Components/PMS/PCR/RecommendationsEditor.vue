@@ -8,10 +8,12 @@
         v-if="isUserSupervisor"
     >
         <Button
-            label="Add Recommendations"
-            icon=""
+            label="Add/Edit Recommendations" 
+            outlined
+            icon="pi pi-pencil"
             @click="visible = true"
             size="small"
+            class="p-2"
             v-if="!form.recommendations"
         />
         <Button

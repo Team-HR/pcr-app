@@ -11,6 +11,7 @@ td {
 <script>
 import RecommendationsEditor from "@/Components/PMS/PCR/RecommendationsEditor.vue";
 import Correction from "@/Components/PMS/PCR/CoreFunctionAccomplishmentEditor.vue";
+import ViewCommentsComponent from "@/Components/PMS/PCR/ViewCommentsComponent.vue";
 import { router } from "@inertiajs/vue3";
 
 export default {
@@ -25,15 +26,23 @@ export default {
         // AuthLayout,
         RecommendationsEditor,
         Correction, //edit_accomplishment_modal
+        ViewCommentsComponent,
     },
     data() {
         return {
             current_url: document.location.pathname,
+            is_sup_approved: false,
         };
     },
     created() {},
     computed: {},
     methods: {
+        approve() {
+                this.is_sup_approved = !this.is_sup_approved
+        },
+        viewComments(data) {
+            console.log("viewComments: ", data);
+        },
         revisionColor(pms_pcr_core_function_data) {
             if (!pms_pcr_core_function_data) return null;
             if (pms_pcr_core_function_data.created_by_type != "usr") {
@@ -307,12 +316,50 @@ export default {
                             >
                                 <!-- if  mfo has no success indicator (title) conditioned colspan if has multiple success indicator -->
                                 <td :colspan="row.mfo_only ? 9 : 1">
-                                    <div :style="indent(row.level)">
+                                    <div
+                                        :style="indent(row.level)"
+                                        style="position: relative"
+                                    >
                                         <template
                                             v-if="
                                                 row.pms_pcr_core_function_data
                                             "
                                         >
+                                            <!-- <Button
+                                                v-if="
+                                                    row
+                                                        .pms_pcr_core_function_data
+                                                        .correction_comments_data
+                                                        .length > 0
+                                                "
+                                                label="View Comments"
+                                                size="small"
+                                                class="p-2 bg-red-300"
+                                                style="
+                                                    position: absolute;
+                                                    left: -150px;
+                                                "
+                                                @click="
+                                                    viewComments(
+                                                        row
+                                                            .pms_pcr_core_function_data
+                                                            .correction_comments_data
+                                                    )
+                                                "
+                                            ></Button> -->
+                                            <ViewCommentsComponent
+                                                v-if="
+                                                    row
+                                                        .pms_pcr_core_function_data
+                                                        .correction_comments_data
+                                                        .length > 0
+                                                "
+                                                :correction_comments_data="
+                                                    row
+                                                        .pms_pcr_core_function_data
+                                                        .correction_comments_data
+                                                "
+                                            />
                                             <span
                                                 class="m-2 px-1"
                                                 v-if="
@@ -884,12 +931,12 @@ export default {
                         icon="pi pi-undo"
                     /> -->
                     <Button
-                        @click=""
+                        @click="approve()"
                         outlined
-                        class="m-2"
-                        severity="success"
-                        label="Approve"
-                        icon="pi pi-check-circle"
+                        class="m-2 px-8"
+                        :severity="is_sup_approved? 'danger' :'success'"
+                        :label="is_sup_approved? 'Revert' :'Approve'"
+                        :icon="is_sup_approved? 'pi pi-undo':'pi pi-check-circle'"
                     />
                 </div>
             </template>

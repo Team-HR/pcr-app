@@ -120,7 +120,7 @@
                     v-model="accomplishment.remarks"
                 />
             </div>
-            <div class="field bg-red-50 p-5">
+            <div class="field bg-red-50 p-3">
                 <div class="font-bold mb-2">Correction Comment/s:</div>
                 <Textarea
                     :autoResize="true"
@@ -136,9 +136,20 @@
                             .pms_pcr_core_function_data
                             .correction_comments_data"
                     >
-                        <!-- {{ comment }} -->
-                        <p class="uppercase">"{{ comment.correction_comments }}"</p>
-                        <p>-- {{ comment.created_by }} / <span class="uppercase">{{ comment.created_by_type }}</span></p>
+                      <div class="p-3">
+                        <p class="uppercase">
+                            "{{ comment.correction_comments }}"
+                        </p>
+                        <p class="text-xs">
+                            -- {{ comment.created_by }} /
+                            <span class="uppercase">{{
+                                comment.created_by_type
+                            }}</span>
+
+                            <i> ({{ comment.created_at }})</i>
+                        </p>
+                      </div>
+                      
                     </template>
                 </div>
             </div>
